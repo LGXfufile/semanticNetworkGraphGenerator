@@ -1,0 +1,25 @@
+{
+  "name": "semantic-network-generator",
+  "version": "1.0.0",
+  "description": "语义网络图生成器 - 上传Excel文件自动生成可交互的语义网络图",
+  "main": "index.html",
+  "scripts": {
+    "dev": "python -m http.server 3000",
+    "build": "echo 'Static site - no build needed'",
+    "start": "python -m http.server 8000"
+  },
+  "keywords": [
+    "semantic-network",
+    "data-visualization",
+    "excel",
+    "network-graph",
+    "echarts"
+  ],
+  "author": "Your Name",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yourusername/semantic-network-generator.git"
+  },
+  "homepage": "https://your-project.vercel.app"
+} 
