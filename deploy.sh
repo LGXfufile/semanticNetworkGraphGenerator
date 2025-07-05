@@ -2,7 +2,7 @@
 
 # 语义网络图生成器 - 自动部署脚本
 
-echo "🚀 开始部署语义网络图生成器..."
+echo "🚀 开始部署语义网络图生成器到 semnetworkgraph.store..."
 
 # 检查是否有未提交的更改
 if [[ -n $(git status --porcelain) ]]; then
@@ -21,4 +21,5 @@ git push origin main
 echo "✅ 代码推送完成！"
 echo "🌐 Vercel将自动检测更改并部署"
 echo "📱 请查看Vercel仪表板获取部署状态"
-echo "🔗 部署完成后可访问: https://semantic-network-graph-generator-my.vercel.app/" 
+echo "🔗 部署完成后可访问: https://semnetworkgraph.store"
+echo "🔗 备用访问地址: https://www.semnetworkgraph.store" 
