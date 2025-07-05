@@ -21,4 +21,4 @@ git push origin main
 echo "✅ 代码推送完成！"
 echo "🌐 Vercel将自动检测更改并部署"
 echo "📱 请查看Vercel仪表板获取部署状态"
-echo "🔗 部署完成后可访问: https://your-project.vercel.app" 
+echo "🔗 部署完成后可访问: https://semantic-network-graph-generator-my.vercel.app/" 
