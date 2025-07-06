@@ -103,6 +103,108 @@
       background: linear-gradient(135deg, #138496, #0f6674);
     }
     
+    .btn-warning {
+      background: linear-gradient(135deg, #ffc107, #e0a800);
+      color: #212529;
+    }
+    
+    .btn-warning:hover {
+      background: linear-gradient(135deg, #e0a800, #d39e00);
+    }
+    
+    /* 底色切换控制区域 */
+    .background-controls {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      align-items: center;
+      margin-bottom: 20px;
+      padding: 15px;
+      background: #f8f9fa;
+      border-radius: 8px;
+      border: 1px solid #e9ecef;
+    }
+    
+    .background-controls label {
+      font-weight: 500;
+      color: #495057;
+      margin-right: 10px;
+    }
+    
+    .background-selector {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    
+    .background-option {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      padding: 8px 12px;
+      border: 2px solid #dee2e6;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      background: white;
+    }
+    
+    .background-option:hover {
+      border-color: #007bff;
+      transform: translateY(-1px);
+    }
+    
+    .background-option.active {
+      border-color: #007bff;
+      background: #e3f2fd;
+      box-shadow: 0 2px 4px rgba(0,123,255,0.2);
+    }
+    
+    .background-option input[type="radio"] {
+      margin: 0;
+    }
+    
+    .background-preview {
+      width: 20px;
+      height: 20px;
+      border-radius: 4px;
+      border: 1px solid #ddd;
+      display: inline-block;
+    }
+    
+    .bg-gradient1 {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    }
+    
+    .bg-gradient2 {
+      background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+    }
+    
+    .bg-gradient3 {
+      background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+    }
+    
+    .bg-gradient4 {
+      background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+    }
+    
+    .bg-gradient5 {
+      background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+    }
+    
+    .bg-gradient6 {
+      background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+    }
+    
+    .bg-dark {
+      background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+    }
+    
+    .bg-none {
+      background: #ffffff;
+    }
+    
     #file {
       margin: 10px 0;
       padding: 10px;
@@ -154,6 +256,15 @@
         rgba(255,255,255,0.05) 50%, 
         rgba(255,255,255,0.1) 100%);
       pointer-events: none;
+    }
+    
+    /* 无底色样式 */
+    #main.no-background {
+      background: #ffffff;
+    }
+    
+    #main.no-background::before {
+      display: none;
     }
     
     #status {
@@ -311,6 +422,15 @@
       #main {
         height: 400px;
       }
+      
+      .background-selector {
+        justify-content: center;
+      }
+      
+      .background-controls {
+        flex-direction: column;
+        gap: 15px;
+      }
     }
     
     @media (max-width: 480px) {
@@ -357,12 +477,59 @@
       <div id="status"></div>
     </div>
     
+    <!-- 底色切换控制区域 -->
+    <div class="background-controls">
+      <label>🎨 选择图表底色：</label>
+      <div class="background-selector">
+        <div class="background-option active" onclick="changeBackground('gradient1')">
+          <input type="radio" name="background" value="gradient1" checked>
+          <span class="background-preview bg-gradient1"></span>
+          <span>紫蓝渐变</span>
+        </div>
+        <div class="background-option" onclick="changeBackground('gradient2')">
+          <input type="radio" name="background" value="gradient2">
+          <span class="background-preview bg-gradient2"></span>
+          <span>粉红渐变</span>
+        </div>
+        <div class="background-option" onclick="changeBackground('gradient3')">
+          <input type="radio" name="background" value="gradient3">
+          <span class="background-preview bg-gradient3"></span>
+          <span>蓝青渐变</span>
+        </div>
+        <div class="background-option" onclick="changeBackground('gradient4')">
+          <input type="radio" name="background" value="gradient4">
+          <span class="background-preview bg-gradient4"></span>
+          <span>绿青渐变</span>
+        </div>
+        <div class="background-option" onclick="changeBackground('gradient5')">
+          <input type="radio" name="background" value="gradient5">
+          <span class="background-preview bg-gradient5"></span>
+          <span>粉黄渐变</span>
+        </div>
+        <div class="background-option" onclick="changeBackground('gradient6')">
+          <input type="radio" name="background" value="gradient6">
+          <span class="background-preview bg-gradient6"></span>
+          <span>淡雅渐变</span>
+        </div>
+        <div class="background-option" onclick="changeBackground('dark')">
+          <input type="radio" name="background" value="dark">
+          <span class="background-preview bg-dark"></span>
+          <span>深色主题</span>
+        </div>
+        <div class="background-option" onclick="changeBackground('none')">
+          <input type="radio" name="background" value="none">
+          <span class="background-preview bg-none"></span>
+          <span>无底色</span>
+        </div>
+      </div>
+    </div>
+    
     <div class="chart-container">
       <div id="main"></div>
     </div>
     
     <div class="footer">
-      <p>支持的格式：Excel (.xlsx, .xls) | 生成高质量PNG图片</p>
+      <p>支持的格式：Excel (.xlsx, .xls) | 生成高质量PNG图片 | 🆕 支持多种底色主题</p>
       <p>© 2025 语义网络图生成器 - 让数据可视化更简单</p>
     </div>
   </div>
@@ -375,6 +542,43 @@
     let chart;
     let currentGraphData = null;
     let animationInterval;
+    let currentBackground = 'gradient1';
+    
+    // 底色配置
+    const backgroundStyles = {
+      'gradient1': {
+        background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+        showOverlay: true
+      },
+      'gradient2': {
+        background: 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)',
+        showOverlay: true
+      },
+      'gradient3': {
+        background: 'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)',
+        showOverlay: true
+      },
+      'gradient4': {
+        background: 'linear-gradient(135deg, #43e97b 0%, #38f9d7 100%)',
+        showOverlay: true
+      },
+      'gradient5': {
+        background: 'linear-gradient(135deg, #fa709a 0%, #fee140 100%)',
+        showOverlay: true
+      },
+      'gradient6': {
+        background: 'linear-gradient(135deg, #a8edea 0%, #fed6e3 100%)',
+        showOverlay: true
+      },
+      'dark': {
+        background: 'linear-gradient(135deg, #2c3e50 0%, #34495e 100%)',
+        showOverlay: true
+      },
+      'none': {
+        background: '#ffffff',
+        showOverlay: false
+      }
+    };
     
     // 模版数据
     const templateData = [
@@ -383,8 +587,78 @@
       ['西湖', '贵', '负面评价', '旅游地', '负面评论词'],
       ['西湖', '自然景观', '包含要素', '旅游地', '旅游要素'],
       ['自然景观', '壮观', '正面关联', '旅游要素', '正面评论词'],
-      ['美丽', '壮观', '情感关联', '正面评论词', '正面评论词']
+      ['美丽', '壮观', '情感关联', '正面评论词', '正面评论词'],
+      ['断桥', '浪漫', '正面评价', '景点', '正面评论词'],
+      ['雷峰塔', '历史', '文化关联', '景点', '旅游要素'],
+      ['三潭印月', '宁静', '正面评价', '景点', '正面评论词'],
+      ['游船', '体验', '活动关联', '旅游要素', '旅游要素'],
+      ['门票', '昂贵', '负面评价', '旅游要素', '负面评论词']
     ];
+    
+    // 底色切换函数
+    function changeBackground(backgroundType) {
+      currentBackground = backgroundType;
+      const mainElement = document.getElementById('main');
+      const style = backgroundStyles[backgroundType];
+      
+      // 更新样式
+      mainElement.style.background = style.background;
+      
+      // 控制overlay显示
+      if (style.showOverlay) {
+        mainElement.classList.remove('no-background');
+      } else {
+        mainElement.classList.add('no-background');
+      }
+      
+      // 更新选中状态
+      document.querySelectorAll('.background-option').forEach(option => {
+        option.classList.remove('active');
+      });
+      
+      const selectedOption = document.querySelector(`[onclick="changeBackground('${backgroundType}')"]`);
+      if (selectedOption) {
+        selectedOption.classList.add('active');
+        const radio = selectedOption.querySelector('input[type="radio"]');
+        if (radio) radio.checked = true;
+      }
+      
+      // 如果已有图表，重新渲染以适应新背景
+      if (chart && currentGraphData) {
+        updateChartBackground();
+      }
+      
+      console.log('🎨 底色已切换为:', backgroundType);
+    }
+    
+    // 更新图表背景适配
+    function updateChartBackground() {
+      if (!chart || !currentGraphData) return;
+      
+      const option = chart.getOption();
+      
+      // 根据背景调整文字颜色
+      const textColor = currentBackground === 'dark' ? '#ffffff' : 
+                       currentBackground === 'none' ? '#333333' : '#ffffff';
+      
+      // 更新图表配置
+      const updatedOption = {
+        ...option,
+        backgroundColor: 'transparent',
+        textStyle: {
+          color: textColor
+        },
+        legend: {
+          ...option.legend[0],
+          textStyle: {
+            color: textColor,
+            fontSize: 14
+          }
+        }
+      };
+      
+      chart.setOption(updatedOption, true);
+    }
     
     // 显示状态信息
     function showStatus(message, type = 'info') {
@@ -452,7 +726,7 @@
       }
     }
     
-    // 下载数据模版 - 使用全局函数
+    // 下载数据模版
     function downloadTemplate() {
       console.log('📥 下载模版函数被调用');
       try {
@@ -502,637 +776,383 @@
         // 正面评论词
         {id: '美丽', name: '美丽', category: 1, nodeType: '正面评论词', value: 90, itemStyle: {color: '#4ECDC4'}},
         {id: '壮观', name: '壮观', category: 1, nodeType: '正面评论词', value: 85, itemStyle: {color: '#4ECDC4'}},
-        {id: '宁静', name: '宁静', category: 1, nodeType: '正面评论词', value: 80, itemStyle: {color: '#4ECDC4'}},
-        {id: '浪漫', name: '浪漫', category: 1, nodeType: '正面评论词', value: 75, itemStyle: {color: '#4ECDC4'}},
-        {id: '清新', name: '清新', category: 1, nodeType: '正面评论词', value: 70, itemStyle: {color: '#4ECDC4'}},
+        {id: '浪漫', name: '浪漫', category: 1, nodeType: '正面评论词', value: 80, itemStyle: {color: '#4ECDC4'}},
+        {id: '宁静', name: '宁静', category: 1, nodeType: '正面评论词', value: 75, itemStyle: {color: '#4ECDC4'}},
+        {id: '舒适', name: '舒适', category: 1, nodeType: '正面评论词', value: 70, itemStyle: {color: '#4ECDC4'}},
         
         // 负面评论词
-        {id: '拥挤', name: '拥挤', category: 2, nodeType: '负面评论词', value: 60, itemStyle: {color: '#FFE66D'}},
-        {id: '商业化', name: '商业化', category: 2, nodeType: '负面评论词', value: 55, itemStyle: {color: '#FFE66D'}},
-        {id: '昂贵', name: '昂贵', category: 2, nodeType: '负面评论词', value: 50, itemStyle: {color: '#FFE66D'}},
+        {id: '贵', name: '贵', category: 2, nodeType: '负面评论词', value: 60, itemStyle: {color: '#FFE66D'}},
+        {id: '拥挤', name: '拥挤', category: 2, nodeType: '负面评论词', value: 65, itemStyle: {color: '#FFE66D'}},
+        {id: '昂贵', name: '昂贵', category: 2, nodeType: '负面评论词', value: 55, itemStyle: {color: '#FFE66D'}},
         
         // 旅游要素
         {id: '自然景观', name: '自然景观', category: 3, nodeType: '旅游要素', value: 95, itemStyle: {color: '#95E1D3'}},
-        {id: '历史文化', name: '历史文化', category: 3, nodeType: '旅游要素', value: 90, itemStyle: {color: '#95E1D3'}},
-        {id: '湖光山色', name: '湖光山色', category: 3, nodeType: '旅游要素', value: 85, itemStyle: {color: '#95E1D3'}},
-        {id: '建筑艺术', name: '建筑艺术', category: 3, nodeType: '旅游要素', value: 80, itemStyle: {color: '#95E1D3'}},
+        {id: '历史', name: '历史', category: 3, nodeType: '旅游要素', value: 85, itemStyle: {color: '#95E1D3'}},
+        {id: '文化', name: '文化', category: 3, nodeType: '旅游要素', value: 80, itemStyle: {color: '#95E1D3'}},
+        {id: '体验', name: '体验', category: 3, nodeType: '旅游要素', value: 75, itemStyle: {color: '#95E1D3'}},
+        {id: '游船', name: '游船', category: 3, nodeType: '旅游要素', value: 70, itemStyle: {color: '#95E1D3'}},
+        {id: '门票', name: '门票', category: 3, nodeType: '旅游要素', value: 65, itemStyle: {color: '#95E1D3'}},
         
-        // 活动体验
-        {id: '游船', name: '游船', category: 4, nodeType: '活动', value: 70, itemStyle: {color: '#FFD93D'}},
-        {id: '摄影', name: '摄影', category: 4, nodeType: '活动', value: 75, itemStyle: {color: '#FFD93D'}},
-        {id: '散步', name: '散步', category: 4, nodeType: '活动', value: 65, itemStyle: {color: '#FFD93D'}},
-        
-        // 服务设施
-        {id: '停车场', name: '停车场', category: 5, nodeType: '设施', value: 40, itemStyle: {color: '#4D96FF'}},
-        {id: '餐厅', name: '餐厅', category: 5, nodeType: '设施', value: 45, itemStyle: {color: '#4D96FF'}},
-        {id: '导游服务', name: '导游服务', category: 5, nodeType: '服务', value: 50, itemStyle: {color: '#9B59B6'}}
+        // 拓展要素
+        {id: '摄影', name: '摄影', category: 4, nodeType: '拓展要素', value: 60, itemStyle: {color: '#A8E6CF'}},
+        {id: '散步', name: '散步', category: 4, nodeType: '拓展要素', value: 55, itemStyle: {color: '#A8E6CF'}},
+        {id: '观光', name: '观光', category: 4, nodeType: '拓展要素', value: 65, itemStyle: {color: '#A8E6CF'}},
       ];
       
       const links = [
-        // 西湖的核心关系
-        {source: '西湖', target: '美丽', name: '正面评价', value: 10},
-        {source: '西湖', target: '壮观', name: '正面评价', value: 9},
-        {source: '西湖', target: '宁静', name: '正面评价', value: 8},
-        {source: '西湖', target: '拥挤', name: '负面评价', value: 6},
-        {source: '西湖', target: '商业化', name: '负面评价', value: 5},
+        // 核心关系
+        {source: '西湖', target: '美丽', value: 10, lineStyle: {color: '#4ECDC4', width: 4}},
+        {source: '西湖', target: '自然景观', value: 9, lineStyle: {color: '#95E1D3', width: 4}},
+        {source: '西湖', target: '贵', value: 6, lineStyle: {color: '#FFE66D', width: 3}},
+        {source: '西湖', target: '断桥', value: 8, lineStyle: {color: '#FF8B94', width: 3}},
+        {source: '西湖', target: '雷峰塔', value: 8, lineStyle: {color: '#FF8B94', width: 3}},
+        {source: '西湖', target: '三潭印月', value: 7, lineStyle: {color: '#FF8B94', width: 3}},
         
         // 景点关系
-        {source: '西湖', target: '断桥', name: '包含景点', value: 8},
-        {source: '西湖', target: '雷峰塔', name: '包含景点', value: 8},
-        {source: '西湖', target: '三潭印月', name: '包含景点', value: 7},
+        {source: '断桥', target: '浪漫', value: 8, lineStyle: {color: '#4ECDC4', width: 3}},
+        {source: '雷峰塔', target: '历史', value: 9, lineStyle: {color: '#95E1D3', width: 3}},
+        {source: '三潭印月', target: '宁静', value: 7, lineStyle: {color: '#4ECDC4', width: 3}},
         
-        // 景点评价
-        {source: '断桥', target: '浪漫', name: '特色评价', value: 7},
-        {source: '断桥', target: '拥挤', name: '负面评价', value: 5},
-        {source: '雷峰塔', target: '壮观', name: '正面评价', value: 8},
-        {source: '雷峰塔', target: '历史文化', name: '文化价值', value: 9},
-        {source: '三潭印月', target: '美丽', name: '正面评价', value: 8},
+        // 要素关系
+        {source: '自然景观', target: '壮观', value: 8, lineStyle: {color: '#4ECDC4', width: 3}},
+        {source: '历史', target: '文化', value: 9, lineStyle: {color: '#95E1D3', width: 3}},
+        {source: '体验', target: '舒适', value: 6, lineStyle: {color: '#4ECDC4', width: 2}},
+        {source: '游船', target: '体验', value: 7, lineStyle: {color: '#95E1D3', width: 2}},
+        {source: '门票', target: '昂贵', value: 7, lineStyle: {color: '#FFE66D', width: 3}},
         
-        // 旅游要素关系
-        {source: '西湖', target: '自然景观', name: '包含要素', value: 10},
-        {source: '西湖', target: '历史文化', name: '包含要素', value: 9},
-        {source: '西湖', target: '湖光山色', name: '包含要素', value: 10},
-        {source: '雷峰塔', target: '建筑艺术', name: '包含要素', value: 8},
+        // 情感关联
+        {source: '美丽', target: '壮观', value: 6, lineStyle: {color: '#4ECDC4', width: 2}},
+        {source: '浪漫', target: '美丽', value: 5, lineStyle: {color: '#4ECDC4', width: 2}},
+        {source: '贵', target: '拥挤', value: 5, lineStyle: {color: '#FFE66D', width: 2}},
         
-        // 要素与评价的关系
-        {source: '自然景观', target: '美丽', name: '引发评价', value: 9},
-        {source: '自然景观', target: '清新', name: '引发评价', value: 8},
-        {source: '湖光山色', target: '壮观', name: '引发评价', value: 9},
-        {source: '历史文化', target: '浪漫', name: '引发评价', value: 7},
-        {source: '建筑艺术', target: '壮观', name: '引发评价', value: 8},
+        // 拓展关系
+        {source: '自然景观', target: '摄影', value: 6, lineStyle: {color: '#A8E6CF', width: 2}},
+        {source: '宁静', target: '散步', value: 5, lineStyle: {color: '#A8E6CF', width: 2}},
+        {source: '美丽', target: '观光', value: 7, lineStyle: {color: '#A8E6CF', width: 2}},
+        {source: '历史', target: '观光', value: 6, lineStyle: {color: '#A8E6CF', width: 2}},
         
-        // 活动体验
-        {source: '西湖', target: '游船', name: '提供活动', value: 7},
-        {source: '西湖', target: '摄影', name: '提供活动', value: 8},
-        {source: '西湖', target: '散步', name: '提供活动', value: 6},
-        
-        // 活动与评价
-        {source: '游船', target: '浪漫', name: '产生体验', value: 8},
-        {source: '游船', target: '昂贵', name: '产生体验', value: 5},
-        {source: '摄影', target: '美丽', name: '产生体验', value: 9},
-        {source: '散步', target: '宁静', name: '产生体验', value: 8},
-        
-        // 服务设施
-        {source: '西湖', target: '停车场', name: '配套设施', value: 4},
-        {source: '西湖', target: '餐厅', name: '配套设施', value: 5},
-        {source: '西湖', target: '导游服务', name: '配套服务', value: 5},
-        
-        // 设施与评价
-        {source: '停车场', target: '拥挤', name: '引发问题', value: 6},
-        {source: '餐厅', target: '昂贵', name: '引发问题', value: 6},
-        {source: '餐厅', target: '商业化', name: '引发问题', value: 7},
-        {source: '导游服务', target: '商业化', name: '引发问题', value: 5},
-        
-        // 评价词之间的关联
-        {source: '美丽', target: '壮观', name: '情感关联', value: 8},
-        {source: '美丽', target: '宁静', name: '情感关联', value: 7},
-        {source: '宁静', target: '清新', name: '情感关联', value: 8},
-        {source: '浪漫', target: '美丽', name: '情感关联', value: 7},
-        {source: '拥挤', target: '商业化', name: '负面关联', value: 6}
+        // 交叉关系
+        {source: '断桥', target: '摄影', value: 5, lineStyle: {color: '#A8E6CF', width: 2}},
+        {source: '雷峰塔', target: '观光', value: 6, lineStyle: {color: '#A8E6CF', width: 2}},
+        {source: '拥挤', target: '体验', value: 4, lineStyle: {color: '#FFE66D', width: 2}},
       ];
       
-      return { nodes, links };
+      const categories = [
+        {name: '旅游地', itemStyle: {color: '#FF6B6B'}},
+        {name: '正面评论词', itemStyle: {color: '#4ECDC4'}},
+        {name: '负面评论词', itemStyle: {color: '#FFE66D'}},
+        {name: '旅游要素', itemStyle: {color: '#95E1D3'}},
+        {name: '拓展要素', itemStyle: {color: '#A8E6CF'}}
+      ];
+      
+      return { nodes, links, categories };
     }
     
-    // 初始化炫酷示例图表
-    function initSampleChart() {
-      if (!chart) return;
+    // 初始化图表
+    function initChart() {
+      const mainElement = document.getElementById('main');
+      if (!mainElement) {
+        console.error('找不到图表容器');
+        return;
+      }
       
-      console.log('🎨 初始化炫酷示例图表');
+      chart = echarts.init(mainElement);
       
-      const { nodes, links } = createDemoData();
+      // 创建示例数据
+      const demoData = createDemoData();
+      currentGraphData = demoData;
       
-      // 设置图表选项
+      // 配置选项
       const option = {
+        backgroundColor: 'transparent',
+        animationDurationUpdate: 1500,
+        animationEasingUpdate: 'quinticInOut',
         title: {
-          text: '语义网络图示例',
+          text: '语义网络图',
           left: 'center',
           top: 20,
-          textStyle: { 
-            fontSize: 20, 
-            fontWeight: 'bold',
-            color: '#fff',
-            textShadowColor: 'rgba(0, 0, 0, 0.5)',
-            textShadowBlur: 10
+          textStyle: {
+            color: '#ffffff',
+            fontSize: 24,
+            fontWeight: 'bold'
           }
         },
         tooltip: {
           trigger: 'item',
           formatter: function(params) {
             if (params.dataType === 'node') {
-              return `
-                <div style="padding: 10px; border-radius: 8px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; box-shadow: 0 4px 15px rgba(0,0,0,0.3);">
-                  <strong style="font-size: 14px;">${params.name}</strong><br/>
-                  <span style="font-size: 12px;">类型: ${params.data.nodeType}</span><br/>
-                  <span style="font-size: 12px;">权重: ${params.data.value}</span>
-                </div>
-              `;
-            } else {
-              return `
-                <div style="padding: 10px; border-radius: 8px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; box-shadow: 0 4px 15px rgba(0,0,0,0.3);">
-                  <strong style="font-size: 14px;">${params.data.source} → ${params.data.target}</strong><br/>
-                  <span style="font-size: 12px;">关系: ${params.data.name}</span><br/>
-                  <span style="font-size: 12px;">强度: ${params.data.value}</span>
-                </div>
-              `;
+              return `<div style="padding: 10px;">
+                <strong>${params.data.name}</strong><br/>
+                类型: ${params.data.nodeType}<br/>
+                权重: ${params.data.value}
+              </div>`;
+            } else if (params.dataType === 'edge') {
+              return `<div style="padding: 10px;">
+                <strong>${params.data.source} → ${params.data.target}</strong><br/>
+                关系强度: ${params.data.value}
+              </div>`;
             }
           },
-          backgroundColor: 'transparent',
-          borderWidth: 0,
-          textStyle: { color: '#fff' }
+          backgroundColor: 'rgba(0,0,0,0.8)',
+          borderColor: '#777',
+          textStyle: {
+            color: '#fff'
+          }
         },
         legend: {
-          data: ['旅游地', '正面评论词', '负面评论词', '旅游要素', '活动', '设施'],
-          bottom: 10,
-          itemGap: 20,
-          textStyle: { 
-            fontSize: 12,
-            color: '#fff',
-            textShadowColor: 'rgba(0, 0, 0, 0.5)',
-            textShadowBlur: 5
+          orient: 'horizontal',
+          bottom: 20,
+          data: demoData.categories.map(cat => cat.name),
+          textStyle: {
+            color: '#ffffff',
+            fontSize: 14
           },
-          itemWidth: 15,
-          itemHeight: 10
+          itemGap: 20
         },
         series: [{
+          name: '语义网络',
           type: 'graph',
           layout: 'force',
+          data: demoData.nodes,
+          links: demoData.links,
+          categories: demoData.categories,
           roam: true,
-          categories: [
-            {name: '旅游地'}, 
-            {name: '正面评论词'}, 
-            {name: '负面评论词'}, 
-            {name: '旅游要素'},
-            {name: '活动'},
-            {name: '设施'}
-          ],
-          data: nodes,
-          links: links,
-          label: { 
-            show: true, 
-            position: 'right', 
-            formatter: '{b}', 
-            fontSize: 11,
-            color: '#fff',
-            fontWeight: 'bold',
-            textShadowColor: 'rgba(0, 0, 0, 0.8)',
-            textShadowBlur: 3
-          },
-          force: { 
-            repulsion: 800, 
-            edgeLength: 100, 
-            gravity: 0.05,
-            friction: 0.6
-          },
-          emphasis: { 
-            focus: 'adjacency', 
-            lineStyle: { 
-              width: 6,
-              shadowBlur: 10,
-              shadowColor: 'rgba(255, 255, 255, 0.8)'
-            },
-            itemStyle: { 
-              shadowBlur: 20, 
-              shadowColor: 'rgba(255, 255, 255, 0.8)',
-              borderWidth: 4,
-              borderColor: '#fff'
-            }
-          },
-          lineStyle: { 
-            color: 'source', 
-            curveness: 0.3, 
-            width: function(params) {
-              return Math.max(1, params.data.value / 3);
-            },
-            opacity: 0.8,
-            shadowBlur: 5,
-            shadowColor: 'rgba(255, 255, 255, 0.3)'
-          },
+          focusNodeAdjacency: true,
           itemStyle: {
             borderColor: '#fff',
             borderWidth: 2,
             shadowBlur: 10,
-            shadowColor: 'rgba(0, 0, 0, 0.5)'
+            shadowColor: 'rgba(0, 0, 0, 0.3)'
           },
-          symbolSize: function(value, params) {
-            return Math.max(20, Math.min(60, params.data.value * 0.8));
+          label: {
+            show: true,
+            position: 'inside',
+            formatter: '{b}',
+            fontSize: 12,
+            fontWeight: 'bold',
+            color: '#fff',
+            textShadowColor: 'rgba(0, 0, 0, 0.8)',
+            textShadowBlur: 2
           },
-          edgeSymbol: ['circle', 'arrow'],
-          edgeSymbolSize: [4, 8],
-          animation: true,
-          animationDuration: 2000,
-          animationEasing: 'cubicOut'
-        }],
-        backgroundColor: 'transparent',
-        animationDuration: 2000,
-        animationEasing: 'cubicOut'
+          lineStyle: {
+            opacity: 0.8,
+            width: 2,
+            curveness: 0.3
+          },
+          emphasis: {
+            focus: 'adjacency',
+            lineStyle: {
+              width: 6
+            },
+            itemStyle: {
+              shadowBlur: 20,
+              shadowColor: 'rgba(0, 0, 0, 0.5)'
+            }
+          },
+          force: {
+            repulsion: 2000,
+            gravity: 0.1,
+            edgeLength: [100, 200],
+            layoutAnimation: true
+          }
+        }]
       };
       
       chart.setOption(option);
       
-      // 添加动态效果
-      let angle = 0;
-      animationInterval = setInterval(() => {
-        angle += 0.02;
-        const newOption = {
-          series: [{
-            force: {
-              repulsion: 800 + Math.sin(angle) * 100,
-              edgeLength: 100 + Math.cos(angle) * 20,
-              gravity: 0.05 + Math.sin(angle * 2) * 0.02
-            }
-          }]
-        };
-        chart.setOption(newOption);
-      }, 100);
+      // 启动动画效果
+      startAnimation();
       
-      console.log('✅ 炫酷示例图表初始化完成');
-    }
-    
-    // 安全的下载图片函数
-    function downloadChart() {
-      console.log('🖼️ 下载图片函数被调用');
-      try {
-        if (!chart) {
-          showStatus('图表未初始化，无法下载', 'error');
-          return;
+      // 窗口大小改变时重新调整图表
+      window.addEventListener('resize', () => {
+        if (chart) {
+          chart.resize();
         }
-        
-        const url = chart.getDataURL({
-          type: 'png',
-          pixelRatio: 2,
-          backgroundColor: '#667eea'
-        });
-        
-        // 创建临时链接进行下载
-        const link = document.createElement('a');
-        link.href = url;
-        link.download = 'semantic-network-graph.png';
-        
-        // 触发下载
-        document.body.appendChild(link);
-        link.click();
-        
-        // 清理
-        setTimeout(() => {
-          if (document.body.contains(link)) {
-            document.body.removeChild(link);
-          }
-        }, 100);
-        
-        showStatus('🖼️ 图片下载成功！', 'success');
-        
-        // 发送下载通知
-        sendNotification('download', currentGraphData);
-        
-      } catch (error) {
-        showStatus('图片下载失败: ' + error.message, 'error');
-        console.error('下载错误:', error);
-      }
+      });
+      
+      console.log('✅ 图表初始化完成');
     }
     
-    // 处理文件上传
-    function handleFileUpload(file) {
-      console.log('📁 开始处理文件:', file.name);
-      showStatus('正在读取文件...', 'info');
-      
-      // 清除动画效果
+    // 启动动画效果
+    function startAnimation() {
       if (animationInterval) {
         clearInterval(animationInterval);
       }
       
+      let animationStep = 0;
+      animationInterval = setInterval(() => {
+        if (chart && currentGraphData) {
+          const option = chart.getOption();
+          const series = option.series[0];
+          
+          // 创建波动效果
+          const animatedNodes = series.data.map(node => ({
+            ...node,
+            symbolSize: node.value * 0.8 + Math.sin(animationStep * 0.1 + node.value * 0.1) * 5
+          }));
+          
+          chart.setOption({
+            series: [{
+              ...series,
+              data: animatedNodes
+            }]
+          }, false);
+          
+          animationStep++;
+        }
+      }, 100);
+    }
+    
+    // 处理文件上传
+    function handleFileUpload(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+      
+      console.log('📁 开始处理文件:', file.name);
+      showStatus('正在处理文件，请稍候...', 'info');
+      
       const reader = new FileReader();
-      reader.onload = function(evt) {
+      reader.onload = function(e) {
         try {
-          console.log('📖 文件读取完成，开始解析...');
-          const data = new Uint8Array(evt.target.result);
+          const data = new Uint8Array(e.target.result);
           const workbook = XLSX.read(data, {type: 'array'});
+          const firstSheetName = workbook.SheetNames[0];
+          const worksheet = workbook.Sheets[firstSheetName];
+          const jsonData = XLSX.utils.sheet_to_json(worksheet, {header: 1});
           
-          console.log('📊 工作簿信息:', workbook.SheetNames);
+          console.log('📊 解析的数据:', jsonData);
           
-          if (workbook.SheetNames.length === 0) {
-            showStatus('Excel 文件中没有找到工作表', 'error');
-            return;
+          if (jsonData.length < 2) {
+            throw new Error('文件数据不足，请确保至少有标题行和一行数据');
           }
           
-          const sheet = workbook.Sheets[workbook.SheetNames[0]];
-          const json = XLSX.utils.sheet_to_json(sheet, {header: 1});
+          // 处理数据
+          const graphData = processExcelData(jsonData);
           
-          console.log('📋 原始数据:', json);
-          console.log('📏 数据行数:', json.length);
-          
-          if (json.length < 2) {
-            showStatus('Excel 文件数据不足，至少需要表头和一行数据。请下载数据模版参考格式', 'error');
-            return;
+          if (graphData.nodes.length === 0) {
+            throw new Error('没有找到有效的节点数据');
           }
-          
-          // 验证表头格式
-          const headers = json[0];
-          console.log('📝 表头:', headers);
-          
-          const expectedHeaders = ['节点A', '节点B', '关系类型', '节点A类型', '节点B类型'];
-          const headersMatch = expectedHeaders.every((header, index) => 
-            headers[index] && headers[index].toString().trim() === header
-          );
-          
-          if (!headersMatch) {
-            showStatus('表头格式不正确，请使用标准模版。应包含：节点A, 节点B, 关系类型, 节点A类型, 节点B类型', 'error');
-            console.log('❌ 期望的表头:', expectedHeaders);
-            console.log('❌ 实际的表头:', headers);
-            return;
-          }
-          
-          showStatus('正在生成网络图...', 'info');
-          
-          // 解析数据
-          let nodes = {}, links = [];
-          let categories = new Set();
-          let nodeTypes = {};
-          let validRows = 0;
-          
-          json.forEach((row, i) => {
-            if (i === 0) return; // 跳过表头
-            if (!row || row.length < 5) {
-              console.log(`⚠️ 跳过不完整的行 ${i}:`, row);
-              return;
-            }
-            
-            const [nodeA, nodeB, relationType, nodeAType, nodeBType] = row.map(cell => 
-              cell ? cell.toString().trim() : ''
-            );
-            
-            console.log(`📊 处理第 ${i} 行:`, {nodeA, nodeB, relationType, nodeAType, nodeBType});
-            
-            if (!nodeA || !nodeB || !nodeAType || !nodeBType) {
-              console.log(`⚠️ 跳过空值行 ${i}:`, {nodeA, nodeB, nodeAType, nodeBType});
-              return;
-            }
-            
-            validRows++;
-            
-            // 记录节点类型
-            nodeTypes[nodeA] = nodeAType;
-            nodeTypes[nodeB] = nodeBType;
-            
-            categories.add(nodeAType);
-            categories.add(nodeBType);
-            
-            // 创建节点
-            if (!nodes[nodeA]) {
-              nodes[nodeA] = {
-                id: nodeA, 
-                name: nodeA, 
-                category: nodeAType, 
-                nodeType: nodeAType,
-                value: Math.random() * 50 + 50,
-                itemStyle: { color: getNodeColor(nodeAType) }
-              };
-            }
-            if (!nodes[nodeB]) {
-              nodes[nodeB] = {
-                id: nodeB, 
-                name: nodeB, 
-                category: nodeBType, 
-                nodeType: nodeBType,
-                value: Math.random() * 50 + 50,
-                itemStyle: { color: getNodeColor(nodeBType) }
-              };
-            }
-            
-            // 创建连接
-            links.push({
-              source: nodeA, 
-              target: nodeB, 
-              name: relationType || '关联', 
-              value: Math.random() * 5 + 5
-            });
-          });
-          
-          console.log('📈 数据解析结果:', {
-            totalRows: json.length,
-            validRows: validRows,
-            nodeCount: Object.keys(nodes).length,
-            linkCount: links.length,
-            categories: Array.from(categories)
-          });
-          
-          if (Object.keys(nodes).length === 0) {
-            showStatus('没有找到有效的节点数据，请检查数据格式', 'error');
-            return;
-          }
-          
-          const categoryArray = Array.from(categories).map(cat => ({name: cat}));
-          
-          // 显示调试信息
-          showDebugInfo({
-            fileName: file.name,
-            totalRows: json.length,
-            validRows: validRows,
-            nodeCount: Object.keys(nodes).length,
-            linkCount: links.length,
-            categories: Array.from(categories)
-          });
-          
-          // 保存当前图表数据
-          currentGraphData = {
-            fileName: file.name,
-            nodeCount: Object.keys(nodes).length,
-            linkCount: links.length,
-            dataRows: validRows
-          };
-          
-          console.log('🎨 开始更新图表...');
           
           // 更新图表
-          const option = {
-            title: {
-              text: '语义网络图',
-              left: 'center',
-              top: 20,
-              textStyle: { 
-                fontSize: 20, 
-                fontWeight: 'bold',
-                color: '#fff',
-                textShadowColor: 'rgba(0, 0, 0, 0.5)',
-                textShadowBlur: 10
-              }
-            },
-            tooltip: {
-              trigger: 'item',
-              formatter: function(params) {
-                if (params.dataType === 'node') {
-                  return `
-                    <div style="padding: 10px; border-radius: 8px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; box-shadow: 0 4px 15px rgba(0,0,0,0.3);">
-                      <strong style="font-size: 14px;">${params.name}</strong><br/>
-                      <span style="font-size: 12px;">类型: ${params.data.nodeType}</span>
-                    </div>
-                  `;
-                } else {
-                  return `
-                    <div style="padding: 10px; border-radius: 8px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; box-shadow: 0 4px 15px rgba(0,0,0,0.3);">
-                      <strong style="font-size: 14px;">${params.data.source} → ${params.data.target}</strong><br/>
-                      <span style="font-size: 12px;">关系: ${params.data.name}</span>
-                    </div>
-                  `;
-                }
-              },
-              backgroundColor: 'transparent',
-              borderWidth: 0
-            },
-            legend: {
-              data: categoryArray.map(c => c.name),
-              bottom: 10,
-              itemGap: 15,
-              textStyle: { 
-                fontSize: 11,
-                color: '#fff',
-                textShadowColor: 'rgba(0, 0, 0, 0.5)',
-                textShadowBlur: 5
-              }
-            },
-            series: [{
-              type: 'graph',
-              layout: 'force',
-              roam: true,
-              categories: categoryArray,
-              data: Object.values(nodes),
-              links: links,
-              label: { 
-                show: true, 
-                position: 'right', 
-                formatter: '{b}', 
-                fontSize: 11,
-                color: '#fff',
-                fontWeight: 'bold',
-                textShadowColor: 'rgba(0, 0, 0, 0.8)',
-                textShadowBlur: 3
-              },
-              force: { 
-                repulsion: 600, 
-                edgeLength: 120, 
-                gravity: 0.1 
-              },
-              emphasis: { 
-                focus: 'adjacency', 
-                lineStyle: { 
-                  width: 4,
-                  shadowBlur: 10,
-                  shadowColor: 'rgba(255, 255, 255, 0.8)'
-                },
-                itemStyle: { 
-                  shadowBlur: 15, 
-                  shadowColor: 'rgba(255, 255, 255, 0.8)',
-                  borderWidth: 3,
-                  borderColor: '#fff'
-                }
-              },
-              lineStyle: { 
-                color: 'source', 
-                curveness: 0.2, 
-                width: 2,
-                opacity: 0.8,
-                shadowBlur: 3,
-                shadowColor: 'rgba(255, 255, 255, 0.3)'
-              },
-              itemStyle: {
-                borderColor: '#fff',
-                borderWidth: 2,
-                shadowBlur: 8,
-                shadowColor: 'rgba(0, 0, 0, 0.5)'
-              },
-              symbolSize: function(value, params) {
-                return Math.max(15, Math.min(40, (params.data.value || 50) * 0.6));
-              },
-              animation: true,
-              animationDuration: 1500,
-              animationEasing: 'cubicOut'
-            }],
-            backgroundColor: 'transparent'
-          };
+          updateChart(graphData);
           
-          chart.setOption(option, true);
-          
-          console.log('✅ 图表更新完成');
-          
-          showStatus(`✅ 成功生成网络图！节点数: ${Object.keys(nodes).length}, 边数: ${links.length}`, 'success');
-          
+          // 显示下载按钮
           const downloadBtn = document.getElementById('download');
           if (downloadBtn) {
             downloadBtn.style.display = 'inline-block';
           }
           
+          showStatus(`文件处理成功！生成了 ${graphData.nodes.length} 个节点和 ${graphData.links.length} 个连接`, 'success');
+          
+          // 显示调试信息
+          showDebugInfo({
+            fileName: file.name,
+            totalRows: jsonData.length,
+            validRows: jsonData.length - 1,
+            nodeCount: graphData.nodes.length,
+            linkCount: graphData.links.length,
+            categories: graphData.categories.map(cat => cat.name)
+          });
+          
           // 发送上传通知
-          sendNotification('upload', currentGraphData);
+          sendNotification('file_upload', {
+            fileName: file.name,
+            fileSize: file.size,
+            nodeCount: graphData.nodes.length,
+            linkCount: graphData.links.length
+          });
           
         } catch (error) {
-          showStatus('文件解析失败: ' + error.message + '。请确保使用正确的Excel格式', 'error');
-          console.error('❌ 文件解析错误:', error);
+          console.error('❌ 文件处理错误:', error);
+          showStatus('文件处理失败: ' + error.message, 'error');
         }
-      };
-      
-      reader.onerror = function() {
-        showStatus('文件读取失败，请重试', 'error');
-        console.error('❌ 文件读取错误');
       };
       
       reader.readAsArrayBuffer(file);
     }
     
-    // 等待DOM完全加载
-    window.addEventListener('load', function() {
-      console.log('🚀 页面完全加载完成');
+    // 处理Excel数据
+    function processExcelData(jsonData) {
+      const headers = jsonData[0];
+      const dataRows = jsonData.slice(1);
       
-      try {
-        // 初始化图表
-        const mainElement = document.getElementById('main');
-        if (mainElement) {
-          chart = echarts.init(mainElement);
-          console.log('📊 ECharts实例创建成功');
-          
-          // 延迟初始化示例图表，确保DOM完全渲染
-          setTimeout(() => {
-            initSampleChart();
-            showStatus('页面加载完成，请先下载数据模版，然后上传Excel文件', 'info');
-          }, 100);
-          
-        } else {
-          console.error('❌ 找不到main元素');
-          showStatus('图表容器初始化失败', 'error');
-          return;
-        }
+      console.log('📋 表头:', headers);
+      console.log('📋 数据行数:', dataRows.length);
+      
+      const nodes = new Map();
+      const links = [];
+      const categorySet = new Set();
+      
+      dataRows.forEach((row, index) => {
+        if (row.length < 2) return;
         
-        // 绑定下载按钮事件
-        const downloadBtn = document.getElementById('download');
-        if (downloadBtn) {
-          downloadBtn.addEventListener('click', downloadChart);
-        }
+        const nodeA = row[0];
+        const nodeB = row[1];
+        const relation = row[2] || '关联';
+        const typeA = row[3] || '默认类型';
+        const typeB = row[4] || '默认类型';
         
-        // 设置文件上传处理
-        const fileInput = document.getElementById('file');
-        if (fileInput) {
-          fileInput.addEventListener('change', function(e) {
-            const file = e.target.files[0];
-            if (!file) return;
-            
-            console.log('📁 用户选择文件:', file.name, file.type, file.size);
-            handleFileUpload(file);
+        if (!nodeA || !nodeB) return;
+        
+        // 添加节点
+        if (!nodes.has(nodeA)) {
+          nodes.set(nodeA, {
+            id: nodeA,
+            name: nodeA,
+            nodeType: typeA,
+            value: 50,
+            itemStyle: { color: getNodeColor(typeA) }
           });
+          categorySet.add(typeA);
         }
         
-        // 监听窗口大小变化，自动调整图表大小
-        window.addEventListener('resize', function() {
-          if (chart) {
-            chart.resize();
+        if (!nodes.has(nodeB)) {
+          nodes.set(nodeB, {
+            id: nodeB,
+            name: nodeB,
+            nodeType: typeB,
+            value: 50,
+            itemStyle: { color: getNodeColor(typeB) }
+          });
+          categorySet.add(typeB);
+        }
+        
+        // 添加连接
+        links.push({
+          source: nodeA,
+          target: nodeB,
+          value: 5,
+          relation: relation,
+          lineStyle: {
+            color: getNodeColor(typeA),
+            width: 2
           }
         });
-        
-      } catch (error) {
-        showStatus('页面初始化失败: ' + error.message, 'error');
-        console.error('❌ 初始化错误:', error);
-      }
-    });
+      });
+      
+      // 设置分类
+      const categories = Array.from(categorySet).map((type, index) => ({
+        name: type,
+        itemStyle: { color: getNodeColor(type) }
+      }));
+      
+      // 为节点设置分类索引
+      const nodeArray = Array.from(nodes.values()).map(node => {
+        const categoryIndex = categories.findIndex(cat => cat.name === node.nodeType);
+        return {
+          ...node,
+          category: categoryIndex >= 0 ? categoryIndex : 0
+        };
+      });
+      
+      return {
+        nodes: nodeArray,
+        links: links,
+        categories: categories
+      };
+    }
     
-    console.log('✅ 脚本加载完成');
+    //
   </script>
 </body>
 </html>
