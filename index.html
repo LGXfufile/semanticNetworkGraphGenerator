@@ -31,12 +31,22 @@
     }
     
     .header {
-      flex-shrink: 0;
+      text-align: center;
       margin-bottom: 30px;
     }
     
+    .header h1 {
+      color: #333;
+      font-size: 28px;
+      margin-bottom: 10px;
+    }
+    
+    .header p {
+      color: #666;
+      font-size: 16px;
+    }
+    
     .upload-section {
-      flex-shrink: 0;
       margin-bottom: 30px;
       padding: 25px;
       border: 2px dashed #007bff;
@@ -51,6 +61,7 @@
       justify-content: center;
       align-items: center;
       flex-wrap: wrap;
+      margin-bottom: 20px;
     }
     
     .btn {
@@ -60,20 +71,11 @@
       cursor: pointer;
       font-size: 16px;
       font-weight: 500;
-      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      transition: all 0.3s ease;
       text-decoration: none;
       display: inline-block;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    }
-    
-    .btn:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 4px 8px rgba(0,0,0,0.15);
-    }
-    
-    .btn:active {
-      transform: translateY(0);
-      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      text-align: center;
+      min-width: 120px;
     }
     
     .btn-primary {
@@ -83,6 +85,8 @@
     
     .btn-primary:hover {
       background: linear-gradient(135deg, #0056b3, #004085);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0, 123, 255, 0.3);
     }
     
     .btn-success {
@@ -92,193 +96,105 @@
     
     .btn-success:hover {
       background: linear-gradient(135deg, #1e7e34, #155724);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(40, 167, 69, 0.3);
     }
     
-    .btn-info {
-      background: linear-gradient(135deg, #17a2b8, #138496);
+    .btn-secondary {
+      background: linear-gradient(135deg, #6c757d, #545b62);
       color: white;
     }
     
-    .btn-info:hover {
-      background: linear-gradient(135deg, #138496, #0f6674);
+    .btn-secondary:hover {
+      background: linear-gradient(135deg, #545b62, #3d4349);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(108, 117, 125, 0.3);
     }
     
-    .btn-warning {
-      background: linear-gradient(135deg, #ffc107, #e0a800);
-      color: #212529;
+    .file-input-wrapper {
+      position: relative;
+      display: inline-block;
     }
     
-    .btn-warning:hover {
-      background: linear-gradient(135deg, #e0a800, #d39e00);
+    .file-input-wrapper input[type=file] {
+      position: absolute;
+      left: -9999px;
     }
     
-    /* 底色切换控制区域 */
+    .file-input-wrapper label {
+      display: inline-block;
+      padding: 12px 24px;
+      background: linear-gradient(135deg, #007bff, #0056b3);
+      color: white;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-size: 16px;
+      font-weight: 500;
+      min-width: 120px;
+      text-align: center;
+    }
+    
+    .file-input-wrapper label:hover {
+      background: linear-gradient(135deg, #0056b3, #004085);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0, 123, 255, 0.3);
+    }
+    
     .background-controls {
       display: flex;
       gap: 10px;
-      justify-content: center;
       align-items: center;
+      justify-content: center;
       margin-bottom: 20px;
-      padding: 15px;
-      background: #f8f9fa;
-      border-radius: 8px;
-      border: 1px solid #e9ecef;
+      flex-wrap: wrap;
     }
     
     .background-controls label {
       font-weight: 500;
-      color: #495057;
+      color: #333;
       margin-right: 10px;
     }
     
-    .background-selector {
-      display: flex;
-      gap: 8px;
-      align-items: center;
-      flex-wrap: wrap;
-    }
-    
-    .background-option {
-      display: flex;
-      align-items: center;
-      gap: 5px;
-      padding: 8px 12px;
-      border: 2px solid #dee2e6;
-      border-radius: 6px;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      background: white;
-    }
-    
-    .background-option:hover {
-      border-color: #007bff;
-      transform: translateY(-1px);
-    }
-    
-    .background-option.active {
-      border-color: #007bff;
-      background: #e3f2fd;
-      box-shadow: 0 2px 4px rgba(0,123,255,0.2);
-    }
-    
-    .background-option input[type="radio"] {
-      margin: 0;
-    }
-    
-    .background-preview {
-      width: 20px;
-      height: 20px;
-      border-radius: 4px;
-      border: 1px solid #ddd;
-      display: inline-block;
-    }
-    
-    .bg-gradient1 {
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    }
-    
-    .bg-gradient2 {
-      background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-    }
-    
-    .bg-gradient3 {
-      background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
-    }
-    
-    .bg-gradient4 {
-      background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
-    }
-    
-    .bg-gradient5 {
-      background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
-    }
-    
-    .bg-gradient6 {
-      background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
-    }
-    
-    .bg-dark {
-      background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
-    }
-    
-    .bg-none {
-      background: #ffffff;
-    }
-    
-    #file {
-      margin: 10px 0;
-      padding: 10px;
+    .background-btn {
+      padding: 8px 16px;
       border: 2px solid #ddd;
       border-radius: 4px;
-      font-size: 16px;
+      cursor: pointer;
+      font-size: 14px;
       transition: all 0.3s ease;
+      background: white;
+      color: #333;
+      min-width: 80px;
+      text-align: center;
     }
     
-    #file:hover {
+    .background-btn:hover {
       border-color: #007bff;
-      box-shadow: 0 0 0 2px rgba(0,123,255,0.1);
+      background: #f8f9ff;
+    }
+    
+    .background-btn.active {
+      border-color: #007bff;
+      background: #007bff;
+      color: white;
     }
     
     .chart-container {
       flex: 1;
-      display: flex;
-      flex-direction: column;
-      min-height: 0;
-    }
-    
-    #main {
-      width: 100%;
-      height: 500px;
-      min-height: 400px;
+      min-height: 500px;
       border: 1px solid #ddd;
       border-radius: 8px;
-      margin-top: 20px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-      transition: all 0.3s ease;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      position: relative;
-      overflow: hidden;
-    }
-    
-    #main:hover {
-      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-    }
-    
-    #main::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background: linear-gradient(45deg, 
-        rgba(255,255,255,0.1) 0%, 
-        rgba(255,255,255,0.05) 50%, 
-        rgba(255,255,255,0.1) 100%);
-      pointer-events: none;
-    }
-    
-    /* 无底色样式 */
-    #main.no-background {
-      background: #ffffff;
-    }
-    
-    #main.no-background::before {
-      display: none;
-    }
-    
-    #status {
-      margin-top: 15px;
-      padding: 10px;
-      border-radius: 4px;
-      font-weight: 500;
+      background: white;
+      margin-bottom: 20px;
     }
     
     .status {
-      padding: 12px;
-      border-radius: 6px;
-      margin: 10px 0;
-      animation: fadeIn 0.3s ease-in-out;
+      padding: 10px 15px;
+      border-radius: 4px;
+      margin-bottom: 15px;
+      font-weight: 500;
+      display: none;
     }
     
     .status.success {
@@ -294,167 +210,62 @@
     }
     
     .status.info {
-      background: #d1ecf1;
-      color: #0c5460;
-      border: 1px solid #bee5eb;
+      background: #cce7ff;
+      color: #004085;
+      border: 1px solid #b3d7ff;
     }
     
-    @keyframes fadeIn {
-      from {
-        opacity: 0;
-        transform: translateY(-10px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
+    .debug-info {
+      background: #f8f9fa;
+      border: 1px solid #dee2e6;
+      border-radius: 4px;
+      padding: 15px;
+      margin-top: 15px;
+      font-family: monospace;
+      font-size: 14px;
+      display: none;
     }
     
-    @keyframes pulse {
-      0% {
-        transform: scale(1);
-        opacity: 1;
-      }
-      50% {
-        transform: scale(1.05);
-        opacity: 0.8;
-      }
-      100% {
-        transform: scale(1);
-        opacity: 1;
-      }
-    }
-    
-    @keyframes glow {
-      0% {
-        box-shadow: 0 0 5px rgba(0,123,255,0.3);
-      }
-      50% {
-        box-shadow: 0 0 20px rgba(0,123,255,0.6);
-      }
-      100% {
-        box-shadow: 0 0 5px rgba(0,123,255,0.3);
-      }
-    }
-    
-    h1 {
+    .debug-info h4 {
+      margin-bottom: 10px;
       color: #333;
-      text-align: center;
-      margin-bottom: 20px;
-      font-size: 28px;
-      animation: slideInDown 0.5s ease-out;
     }
     
-    @keyframes slideInDown {
-      from {
-        opacity: 0;
-        transform: translateY(-30px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-    
-    .description {
-      text-align: center;
-      color: #666;
-      margin-bottom: 30px;
-      font-size: 16px;
-      line-height: 1.6;
-      animation: fadeIn 0.5s ease-out 0.2s both;
-    }
-    
-    .upload-section {
-      animation: fadeIn 0.5s ease-out 0.4s both;
+    .debug-info pre {
+      background: white;
+      padding: 10px;
+      border-radius: 4px;
+      overflow-x: auto;
+      white-space: pre-wrap;
     }
     
     .footer {
-      flex-shrink: 0;
       text-align: center;
       margin-top: 30px;
       padding-top: 20px;
       border-top: 1px solid #eee;
-      color: #999;
-      font-size: 14px;
-      animation: fadeIn 0.5s ease-out 0.6s both;
-    }
-    
-    .debug-info {
-      margin-top: 10px;
-      padding: 10px;
-      background: #f8f9fa;
-      border-radius: 4px;
-      font-size: 12px;
       color: #666;
-      text-align: left;
+      font-size: 14px;
     }
     
-    /* 响应式设计 */
     @media (max-width: 768px) {
-      body {
-        padding: 10px;
-      }
-      
-      .container {
-        padding: 20px;
-        min-height: calc(100vh - 20px);
-      }
-      
-      h1 {
-        font-size: 24px;
-      }
-      
-      .description {
-        font-size: 14px;
-      }
-      
       .button-group {
         flex-direction: column;
-        gap: 10px;
+        align-items: stretch;
       }
       
       .btn {
         width: 100%;
-        max-width: 300px;
-      }
-      
-      #main {
-        height: 400px;
-      }
-      
-      .background-selector {
-        justify-content: center;
+        margin-bottom: 10px;
       }
       
       .background-controls {
         flex-direction: column;
         gap: 15px;
       }
-    }
-    
-    @media (max-width: 480px) {
-      .container {
-        padding: 15px;
-      }
       
-      h1 {
-        font-size: 20px;
-      }
-      
-      #main {
-        height: 350px;
-      }
-    }
-    
-    /* 确保在所有缩放级别下都能正常显示 */
-    @media (min-width: 1400px) {
-      .container {
-        max-width: 1400px;
-      }
-      
-      #main {
-        height: 600px;
+      .background-btn {
+        width: 100%;
       }
     }
   </style>
@@ -462,75 +273,42 @@
 <body>
   <div class="container">
     <div class="header">
-      <h1>🌐 语义网络图生成器</h1>
-      <p class="description">
-        上传Excel文件，自动生成美观的语义网络图。支持节点分类、关系展示和图片导出功能。
-      </p>
+      <h1>🕸️ 语义网络图生成器</h1>
+      <p>上传Excel文件，自动生成炫酷的语义网络图</p>
     </div>
     
     <div class="upload-section">
       <div class="button-group">
-        <button class="btn btn-info" onclick="downloadTemplate()">📥 下载数据模版</button>
-        <input type="file" id="file" accept=".xlsx,.xls" class="btn">
-        <button class="btn btn-success" id="download" style="display:none;">🖼️ 下载图片</button>
+        <div class="file-input-wrapper">
+          <input type="file" id="file" accept=".xlsx,.xls">
+          <label for="file">📁 选择Excel文件</label>
+        </div>
+        <a href="data:application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;base64,UEsDBBQAAAAIANaJk1YAAAAAAAAAAAAAAAALAAAAZGVmYXVsdC54bHNQSwMEFAAACAgA1omTVgAAAAAAAAAAAAAAAA8AAAB4bC9yZWxzLy5yZWxzUEsDBBQAAAAIANaJk1YAAAAAAAAAAAAAAAAaAAAAeGwvX3JlbHMvd29ya2Jvb2sueG1sLnJlbHNQSwMEFAAACAgA1omTVgAAAAAAAAAAAAAAAA8AAAB4bC93b3JrYm9vay54bWxQSwMEFAAACAgA1omTVgAAAAAAAAAAAAAAAA0AAAB4bC9zdHlsZXMueG1sUEsDBBQAAAAIANaJk1YAAAAAAAAAAAAAAAAYAAAAeGwvd29ya3NoZWV0cy9zaGVldDEueG1sUEsDBBQAAAAIANaJk1YAAAAAAAAAAAAAAAAaAAAAeGwvd29ya3NoZWV0cy9zaGVldDEueG1sUEsDBBQAAAAIANaJk1YAAAAAAAAAAAAAAAATAAAAeGwvdGhlbWUvdGhlbWUxLnhtbFBLAQItABQAAAAIANaJk1YAAAAAAAAAAAAAAAALAAAAAAAAAAAAAAAAAAAAZGVmYXVsdC54bHNQSwECLQAUAAAICADWiZNWAAAAAAAAAAAAAAAADwAAAAAAAAAAAAAAACoAAAB4bC9yZWxzLy5yZWxzUEsBAi0AFAAACAgA1omTVgAAAAAAAAAAAAAAABoAAAAAAAAAAAAAAABYAAAAeGwvX3JlbHMvd29ya2Jvb2sueG1sLnJlbHNQSwECLQAUAAAICADWiZNWAAAAAAAAAAAAAAAADwAAAAAAAAAAAAAAAJEAAAB4bC93b3JrYm9vay54bWxQSwECLQAUAAAICADWiZNWAAAAAAAAAAAAAAAADQAAAAAAAAAAAAAAAL8AAAB4bC9zdHlsZXMueG1sUEsBAi0AFAAACAgA1omTVgAAAAAAAAAAAAAAABgAAAAAAAAAAAAAAADrAAAAeGwvd29ya3NoZWV0cy9zaGVldDEueG1sUEsBAi0AFAAACAgA1omTVgAAAAAAAAAAAAAAABoAAAAAAAAAAAAAAAAiAQAAeGwvd29ya3NoZWV0cy9zaGVldDEueG1sUEsBAi0AFAAACAgA1omTVgAAAAAAAAAAAAAAABMAAAAAAAAAAAAAAABbAQAAeGwvdGhlbWUvdGhlbWUxLnhtbFBLBQYAAAAACAAIAOcBAACtAQAAAAA=" download="语义网络图模板.xlsx" class="btn btn-secondary">📥 下载模板</a>
+        <button id="download" class="btn btn-success" style="display: none;">💾 下载图片</button>
       </div>
-      <div id="status"></div>
-    </div>
-    
-    <!-- 底色切换控制区域 -->
-    <div class="background-controls">
-      <label>🎨 选择图表底色：</label>
-      <div class="background-selector">
-        <div class="background-option active" onclick="changeBackground('gradient1')">
-          <input type="radio" name="background" value="gradient1" checked>
-          <span class="background-preview bg-gradient1"></span>
-          <span>紫蓝渐变</span>
-        </div>
-        <div class="background-option" onclick="changeBackground('gradient2')">
-          <input type="radio" name="background" value="gradient2">
-          <span class="background-preview bg-gradient2"></span>
-          <span>粉红渐变</span>
-        </div>
-        <div class="background-option" onclick="changeBackground('gradient3')">
-          <input type="radio" name="background" value="gradient3">
-          <span class="background-preview bg-gradient3"></span>
-          <span>蓝青渐变</span>
-        </div>
-        <div class="background-option" onclick="changeBackground('gradient4')">
-          <input type="radio" name="background" value="gradient4">
-          <span class="background-preview bg-gradient4"></span>
-          <span>绿青渐变</span>
-        </div>
-        <div class="background-option" onclick="changeBackground('gradient5')">
-          <input type="radio" name="background" value="gradient5">
-          <span class="background-preview bg-gradient5"></span>
-          <span>粉黄渐变</span>
-        </div>
-        <div class="background-option" onclick="changeBackground('gradient6')">
-          <input type="radio" name="background" value="gradient6">
-          <span class="background-preview bg-gradient6"></span>
-          <span>淡雅渐变</span>
-        </div>
-        <div class="background-option" onclick="changeBackground('dark')">
-          <input type="radio" name="background" value="dark">
-          <span class="background-preview bg-dark"></span>
-          <span>深色主题</span>
-        </div>
-        <div class="background-option" onclick="changeBackground('none')">
-          <input type="radio" name="background" value="none">
-          <span class="background-preview bg-none"></span>
-          <span>无底色</span>
-        </div>
+      
+      <div class="background-controls">
+        <label>图表背景:</label>
+        <button class="background-btn active" onclick="changeBackground('transparent')">无底色</button>
+        <button class="background-btn" onclick="changeBackground('#ffffff')">白色</button>
+        <button class="background-btn" onclick="changeBackground('#f0f8ff')">淡蓝</button>
+        <button class="background-btn" onclick="changeBackground('#f5f5dc')">米色</button>
+        <button class="background-btn" onclick="changeBackground('#000000')">黑色</button>
       </div>
     </div>
     
-    <div class="chart-container">
-      <div id="main"></div>
+    <div id="status" class="status"></div>
+    
+    <div id="chart" class="chart-container"></div>
+    
+    <div id="debug" class="debug-info">
+      <h4>📊 调试信息</h4>
+      <pre id="debug-content"></pre>
     </div>
     
     <div class="footer">
-      <p>支持的格式：Excel (.xlsx, .xls) | 生成高质量PNG图片 | 🆕 支持多种底色主题</p>
-      <p>© 2025 语义网络图生成器 - 让数据可视化更简单</p>
+      <p>💡 支持的文件格式：Excel (.xlsx, .xls) | 数据格式：节点A | 节点B | 关系 | 类型A | 类型B</p>
+      <p>🎨 拖拽节点可调整位置，滚轮可缩放，点击节点可查看详情</p>
     </div>
   </div>
 
@@ -538,342 +316,199 @@
   <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
   
   <script>
-    // 全局变量
     let chart;
-    let currentGraphData = null;
     let animationInterval;
-    let currentBackground = 'gradient1';
+    let currentBackground = 'transparent';
     
-    // 底色配置
-    const backgroundStyles = {
-      'gradient1': {
-        background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-        showOverlay: true
-      },
-      'gradient2': {
-        background: 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)',
-        showOverlay: true
-      },
-      'gradient3': {
-        background: 'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)',
-        showOverlay: true
-      },
-      'gradient4': {
-        background: 'linear-gradient(135deg, #43e97b 0%, #38f9d7 100%)',
-        showOverlay: true
-      },
-      'gradient5': {
-        background: 'linear-gradient(135deg, #fa709a 0%, #fee140 100%)',
-        showOverlay: true
-      },
-      'gradient6': {
-        background: 'linear-gradient(135deg, #a8edea 0%, #fed6e3 100%)',
-        showOverlay: true
-      },
-      'dark': {
-        background: 'linear-gradient(135deg, #2c3e50 0%, #34495e 100%)',
-        showOverlay: true
-      },
-      'none': {
-        background: '#ffffff',
-        showOverlay: false
-      }
+    // 节点颜色映射
+    const colorMap = {
+      '正面情感词': '#ff6b6b',
+      '负面情感词': '#4ecdc4', 
+      '旅游要素': '#45b7d1',
+      '旅游地': '#96ceb4',
+      '景点': '#ffeaa7',
+      '服务': '#dda0dd',
+      '设施': '#98d8c8',
+      '活动': '#f7dc6f',
+      '默认类型': '#95a5a6'
     };
     
-    // 模版数据
-    const templateData = [
-      ['节点A', '节点B', '关系类型', '节点A类型', '节点B类型'],
-      ['西湖', '美丽', '正面评价', '旅游地', '正面评论词'],
-      ['西湖', '贵', '负面评价', '旅游地', '负面评论词'],
-      ['西湖', '自然景观', '包含要素', '旅游地', '旅游要素'],
-      ['自然景观', '壮观', '正面关联', '旅游要素', '正面评论词'],
-      ['美丽', '壮观', '情感关联', '正面评论词', '正面评论词'],
-      ['断桥', '浪漫', '正面评价', '景点', '正面评论词'],
-      ['雷峰塔', '历史', '文化关联', '景点', '旅游要素'],
-      ['三潭印月', '宁静', '正面评价', '景点', '正面评论词'],
-      ['游船', '体验', '活动关联', '旅游要素', '旅游要素'],
-      ['门票', '昂贵', '负面评价', '旅游要素', '负面评论词']
-    ];
-    
-    // 底色切换函数
-    function changeBackground(backgroundType) {
-      currentBackground = backgroundType;
-      const mainElement = document.getElementById('main');
-      const style = backgroundStyles[backgroundType];
-      
-      // 更新样式
-      mainElement.style.background = style.background;
-      
-      // 控制overlay显示
-      if (style.showOverlay) {
-        mainElement.classList.remove('no-background');
-      } else {
-        mainElement.classList.add('no-background');
-      }
-      
-      // 更新选中状态
-      document.querySelectorAll('.background-option').forEach(option => {
-        option.classList.remove('active');
-      });
-      
-      const selectedOption = document.querySelector(`[onclick="changeBackground('${backgroundType}')"]`);
-      if (selectedOption) {
-        selectedOption.classList.add('active');
-        const radio = selectedOption.querySelector('input[type="radio"]');
-        if (radio) radio.checked = true;
-      }
-      
-      // 如果已有图表，重新渲染以适应新背景
-      if (chart && currentGraphData) {
-        updateChartBackground();
-      }
-      
-      console.log('🎨 底色已切换为:', backgroundType);
-    }
-    
-    // 更新图表背景适配
-    function updateChartBackground() {
-      if (!chart || !currentGraphData) return;
-      
-      const option = chart.getOption();
-      
-      // 根据背景调整文字颜色
-      const textColor = currentBackground === 'dark' ? '#ffffff' : 
-                       currentBackground === 'none' ? '#333333' : '#ffffff';
-      
-      // 更新图表配置
-      const updatedOption = {
-        ...option,
-        backgroundColor: 'transparent',
-        textStyle: {
-          color: textColor
-        },
-        legend: {
-          ...option.legend[0],
-          textStyle: {
-            color: textColor,
-            fontSize: 14
-          }
-        }
-      };
-      
-      chart.setOption(updatedOption, true);
+    // 获取节点颜色
+    function getNodeColor(type) {
+      return colorMap[type] || colorMap['默认类型'];
     }
     
     // 显示状态信息
     function showStatus(message, type = 'info') {
       const statusDiv = document.getElementById('status');
-      if (statusDiv) {
-        statusDiv.innerHTML = `<div class="status ${type}">${message}</div>`;
-        if (type === 'error') {
-          console.error(message);
-        }
+      statusDiv.textContent = message;
+      statusDiv.className = `status ${type}`;
+      statusDiv.style.display = 'block';
+      
+      if (type === 'success') {
+        setTimeout(() => {
+          statusDiv.style.display = 'none';
+        }, 3000);
       }
     }
     
     // 显示调试信息
-    function showDebugInfo(data) {
-      const statusDiv = document.getElementById('status');
-      if (statusDiv) {
-        const debugHtml = `
-          <div class="debug-info">
-            <strong>调试信息:</strong><br>
-            文件名: ${data.fileName || 'N/A'}<br>
-            原始数据行数: ${data.totalRows || 0}<br>
-            有效数据行数: ${data.validRows || 0}<br>
-            节点数: ${data.nodeCount || 0}<br>
-            连接数: ${data.linkCount || 0}<br>
-            节点类型: ${data.categories ? data.categories.join(', ') : 'N/A'}
-          </div>
-        `;
-        statusDiv.innerHTML += debugHtml;
-      }
+    function showDebugInfo(info) {
+      const debugDiv = document.getElementById('debug');
+      const debugContent = document.getElementById('debug-content');
+      debugContent.textContent = JSON.stringify(info, null, 2);
+      debugDiv.style.display = 'block';
     }
     
-    // 通知发送函数
-    async function sendNotification(action, fileInfo = {}) {
+    // 发送通知
+    async function sendNotification(type, data) {
       try {
-        console.log('🔔 发送通知:', action, fileInfo);
-        
         const response = await fetch('/api/notify', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({
-            action: action,
-            fileInfo: fileInfo
+            type: type,
+            data: data,
+            timestamp: new Date().toISOString()
           })
         });
-
-        console.log('📡 API响应状态:', response.status);
         
-        if (!response.ok) {
-          throw new Error(`HTTP ${response.status}: ${response.statusText}`);
-        }
-        
-        const result = await response.json();
-        console.log('📋 API响应内容:', result);
-        
-        if (result.success) {
+        if (response.ok) {
           console.log('✅ 通知发送成功');
         } else {
-          console.error('❌ 通知发送失败:', result);
+          console.warn('⚠️ 通知发送失败:', response.status);
         }
       } catch (error) {
-        console.error('🚨 通知发送异常:', error);
-        // 静默处理通知错误，不显示给用户
+        console.warn('⚠️ 通知发送错误:', error);
       }
     }
     
-    // 下载数据模版
-    function downloadTemplate() {
-      console.log('📥 下载模版函数被调用');
-      try {
-        const ws = XLSX.utils.aoa_to_sheet(templateData);
-        const wb = XLSX.utils.book_new();
-        XLSX.utils.book_append_sheet(wb, ws, '数据模版');
-        
-        const colWidths = [
-          { wch: 15 }, { wch: 15 }, { wch: 12 }, { wch: 15 }, { wch: 15 }
-        ];
-        ws['!cols'] = colWidths;
-        
-        XLSX.writeFile(wb, '语义网络图数据模版.xlsx');
-        showStatus('数据模版下载成功！请按照模版格式填写数据', 'success');
-        sendNotification('template_download');
-      } catch (error) {
-        showStatus('模版下载失败: ' + error.message, 'error');
-      }
+    // 切换背景
+    function changeBackground(bg) {
+      currentBackground = bg;
+      
+      // 更新按钮状态
+      document.querySelectorAll('.background-btn').forEach(btn => {
+        btn.classList.remove('active');
+      });
+      event.target.classList.add('active');
+      
+      // 更新图表背景
+      updateChartBackground();
     }
     
-    // 获取节点颜色
-    function getNodeColor(nodeType) {
-      const colorMap = {
-        '旅游地': '#FF6B6B',
-        '正面评论词': '#4ECDC4',
-        '负面评论词': '#FFE66D', 
-        '旅游要素': '#95E1D3',
-        '拓展要素': '#A8E6CF',
-        '景点': '#FF8B94',
-        '活动': '#FFD93D',
-        '体验': '#6BCF7F',
-        '设施': '#4D96FF',
-        '服务': '#9B59B6'
-      };
-      return colorMap[nodeType] || '#95A5A6';
-    }
-    
-    // 创建炫酷的示例数据
-    function createDemoData() {
-      const nodes = [
-        // 旅游地
-        {id: '西湖', name: '西湖', category: 0, nodeType: '旅游地', value: 100, itemStyle: {color: '#FF6B6B'}},
-        {id: '断桥', name: '断桥', category: 0, nodeType: '景点', value: 80, itemStyle: {color: '#FF8B94'}},
-        {id: '雷峰塔', name: '雷峰塔', category: 0, nodeType: '景点', value: 85, itemStyle: {color: '#FF8B94'}},
-        {id: '三潭印月', name: '三潭印月', category: 0, nodeType: '景点', value: 75, itemStyle: {color: '#FF8B94'}},
-        
-        // 正面评论词
-        {id: '美丽', name: '美丽', category: 1, nodeType: '正面评论词', value: 90, itemStyle: {color: '#4ECDC4'}},
-        {id: '壮观', name: '壮观', category: 1, nodeType: '正面评论词', value: 85, itemStyle: {color: '#4ECDC4'}},
-        {id: '浪漫', name: '浪漫', category: 1, nodeType: '正面评论词', value: 80, itemStyle: {color: '#4ECDC4'}},
-        {id: '宁静', name: '宁静', category: 1, nodeType: '正面评论词', value: 75, itemStyle: {color: '#4ECDC4'}},
-        {id: '舒适', name: '舒适', category: 1, nodeType: '正面评论词', value: 70, itemStyle: {color: '#4ECDC4'}},
-        
-        // 负面评论词
-        {id: '贵', name: '贵', category: 2, nodeType: '负面评论词', value: 60, itemStyle: {color: '#FFE66D'}},
-        {id: '拥挤', name: '拥挤', category: 2, nodeType: '负面评论词', value: 65, itemStyle: {color: '#FFE66D'}},
-        {id: '昂贵', name: '昂贵', category: 2, nodeType: '负面评论词', value: 55, itemStyle: {color: '#FFE66D'}},
-        
-        // 旅游要素
-        {id: '自然景观', name: '自然景观', category: 3, nodeType: '旅游要素', value: 95, itemStyle: {color: '#95E1D3'}},
-        {id: '历史', name: '历史', category: 3, nodeType: '旅游要素', value: 85, itemStyle: {color: '#95E1D3'}},
-        {id: '文化', name: '文化', category: 3, nodeType: '旅游要素', value: 80, itemStyle: {color: '#95E1D3'}},
-        {id: '体验', name: '体验', category: 3, nodeType: '旅游要素', value: 75, itemStyle: {color: '#95E1D3'}},
-        {id: '游船', name: '游船', category: 3, nodeType: '旅游要素', value: 70, itemStyle: {color: '#95E1D3'}},
-        {id: '门票', name: '门票', category: 3, nodeType: '旅游要素', value: 65, itemStyle: {color: '#95E1D3'}},
-        
-        // 拓展要素
-        {id: '摄影', name: '摄影', category: 4, nodeType: '拓展要素', value: 60, itemStyle: {color: '#A8E6CF'}},
-        {id: '散步', name: '散步', category: 4, nodeType: '拓展要素', value: 55, itemStyle: {color: '#A8E6CF'}},
-        {id: '观光', name: '观光', category: 4, nodeType: '拓展要素', value: 65, itemStyle: {color: '#A8E6CF'}},
-      ];
+    // 更新图表背景
+    function updateChartBackground() {
+      if (!chart) return;
       
-      const links = [
-        // 核心关系
-        {source: '西湖', target: '美丽', value: 10, lineStyle: {color: '#4ECDC4', width: 4}},
-        {source: '西湖', target: '自然景观', value: 9, lineStyle: {color: '#95E1D3', width: 4}},
-        {source: '西湖', target: '贵', value: 6, lineStyle: {color: '#FFE66D', width: 3}},
-        {source: '西湖', target: '断桥', value: 8, lineStyle: {color: '#FF8B94', width: 3}},
-        {source: '西湖', target: '雷峰塔', value: 8, lineStyle: {color: '#FF8B94', width: 3}},
-        {source: '西湖', target: '三潭印月', value: 7, lineStyle: {color: '#FF8B94', width: 3}},
-        
-        // 景点关系
-        {source: '断桥', target: '浪漫', value: 8, lineStyle: {color: '#4ECDC4', width: 3}},
-        {source: '雷峰塔', target: '历史', value: 9, lineStyle: {color: '#95E1D3', width: 3}},
-        {source: '三潭印月', target: '宁静', value: 7, lineStyle: {color: '#4ECDC4', width: 3}},
-        
-        // 要素关系
-        {source: '自然景观', target: '壮观', value: 8, lineStyle: {color: '#4ECDC4', width: 3}},
-        {source: '历史', target: '文化', value: 9, lineStyle: {color: '#95E1D3', width: 3}},
-        {source: '体验', target: '舒适', value: 6, lineStyle: {color: '#4ECDC4', width: 2}},
-        {source: '游船', target: '体验', value: 7, lineStyle: {color: '#95E1D3', width: 2}},
-        {source: '门票', target: '昂贵', value: 7, lineStyle: {color: '#FFE66D', width: 3}},
-        
-        // 情感关联
-        {source: '美丽', target: '壮观', value: 6, lineStyle: {color: '#4ECDC4', width: 2}},
-        {source: '浪漫', target: '美丽', value: 5, lineStyle: {color: '#4ECDC4', width: 2}},
-        {source: '贵', target: '拥挤', value: 5, lineStyle: {color: '#FFE66D', width: 2}},
-        
-        // 拓展关系
-        {source: '自然景观', target: '摄影', value: 6, lineStyle: {color: '#A8E6CF', width: 2}},
-        {source: '宁静', target: '散步', value: 5, lineStyle: {color: '#A8E6CF', width: 2}},
-        {source: '美丽', target: '观光', value: 7, lineStyle: {color: '#A8E6CF', width: 2}},
-        {source: '历史', target: '观光', value: 6, lineStyle: {color: '#A8E6CF', width: 2}},
-        
-        // 交叉关系
-        {source: '断桥', target: '摄影', value: 5, lineStyle: {color: '#A8E6CF', width: 2}},
-        {source: '雷峰塔', target: '观光', value: 6, lineStyle: {color: '#A8E6CF', width: 2}},
-        {source: '拥挤', target: '体验', value: 4, lineStyle: {color: '#FFE66D', width: 2}},
-      ];
-      
-      const categories = [
-        {name: '旅游地', itemStyle: {color: '#FF6B6B'}},
-        {name: '正面评论词', itemStyle: {color: '#4ECDC4'}},
-        {name: '负面评论词', itemStyle: {color: '#FFE66D'}},
-        {name: '旅游要素', itemStyle: {color: '#95E1D3'}},
-        {name: '拓展要素', itemStyle: {color: '#A8E6CF'}}
-      ];
-      
-      return { nodes, links, categories };
+      const option = chart.getOption();
+      option.backgroundColor = currentBackground;
+      chart.setOption(option);
     }
     
     // 初始化图表
     function initChart() {
-      const mainElement = document.getElementById('main');
-      if (!mainElement) {
-        console.error('找不到图表容器');
+      const chartDom = document.getElementById('chart');
+      chart = echarts.init(chartDom);
+      
+      // 创建示例数据
+      const exampleData = {
+        nodes: [
+          { id: '西湖', name: '西湖', nodeType: '旅游地', value: 80, category: 0 },
+          { id: '美丽', name: '美丽', nodeType: '正面情感词', value: 60, category: 1 },
+          { id: '壮观', name: '壮观', nodeType: '正面情感词', value: 55, category: 1 },
+          { id: '拥挤', name: '拥挤', nodeType: '负面情感词', value: 45, category: 2 },
+          { id: '嘈杂', name: '嘈杂', nodeType: '负面情感词', value: 40, category: 2 },
+          { id: '断桥', name: '断桥', nodeType: '景点', value: 65, category: 3 },
+          { id: '雷峰塔', name: '雷峰塔', nodeType: '景点', value: 70, category: 3 },
+          { id: '苏堤', name: '苏堤', nodeType: '景点', value: 60, category: 3 },
+          { id: '游船', name: '游船', nodeType: '旅游要素', value: 50, category: 4 },
+          { id: '门票', name: '门票', nodeType: '旅游要素', value: 45, category: 4 },
+          { id: '导游', name: '导游', nodeType: '服务', value: 55, category: 5 },
+          { id: '餐饮', name: '餐饮', nodeType: '服务', value: 50, category: 5 },
+          { id: '停车场', name: '停车场', nodeType: '设施', value: 40, category: 6 },
+          { id: '洗手间', name: '洗手间', nodeType: '设施', value: 35, category: 6 },
+          { id: '摄影', name: '摄影', nodeType: '活动', value: 60, category: 7 },
+          { id: '划船', name: '划船', nodeType: '活动', value: 55, category: 7 }
+        ],
+        links: [
+          { source: '西湖', target: '美丽', relation: '具有特征' },
+          { source: '西湖', target: '壮观', relation: '具有特征' },
+          { source: '西湖', target: '拥挤', relation: '存在问题' },
+          { source: '西湖', target: '嘈杂', relation: '存在问题' },
+          { source: '西湖', target: '断桥', relation: '包含景点' },
+          { source: '西湖', target: '雷峰塔', relation: '包含景点' },
+          { source: '西湖', target: '苏堤', relation: '包含景点' },
+          { source: '西湖', target: '游船', relation: '提供服务' },
+          { source: '西湖', target: '门票', relation: '需要' },
+          { source: '断桥', target: '美丽', relation: '具有特征' },
+          { source: '雷峰塔', target: '壮观', relation: '具有特征' },
+          { source: '苏堤', target: '美丽', relation: '具有特征' },
+          { source: '游船', target: '划船', relation: '提供活动' },
+          { source: '导游', target: '服务', relation: '属于' },
+          { source: '餐饮', target: '服务', relation: '属于' },
+          { source: '停车场', target: '设施', relation: '属于' },
+          { source: '洗手间', target: '设施', relation: '属于' },
+          { source: '摄影', target: '活动', relation: '属于' },
+          { source: '划船', target: '活动', relation: '属于' }
+        ],
+        categories: [
+          { name: '旅游地', itemStyle: { color: getNodeColor('旅游地') } },
+          { name: '正面情感词', itemStyle: { color: getNodeColor('正面情感词') } },
+          { name: '负面情感词', itemStyle: { color: getNodeColor('负面情感词') } },
+          { name: '景点', itemStyle: { color: getNodeColor('景点') } },
+          { name: '旅游要素', itemStyle: { color: getNodeColor('旅游要素') } },
+          { name: '服务', itemStyle: { color: getNodeColor('服务') } },
+          { name: '设施', itemStyle: { color: getNodeColor('设施') } },
+          { name: '活动', itemStyle: { color: getNodeColor('活动') } }
+        ]
+      };
+      
+      // 为节点添加颜色
+      exampleData.nodes.forEach(node => {
+        node.itemStyle = { color: getNodeColor(node.nodeType) };
+      });
+      
+      // 为连线添加颜色
+      exampleData.links.forEach(link => {
+        const sourceNode = exampleData.nodes.find(n => n.id === link.source);
+        link.lineStyle = {
+          color: sourceNode ? getNodeColor(sourceNode.nodeType) : '#999',
+          width: 2
+        };
+      });
+      
+      updateChart(exampleData);
+      
+      console.log('✅ 图表初始化完成');
+    }
+    
+    // 更新图表
+    function updateChart(graphData) {
+      if (!chart) {
+        console.error('❌ 图表未初始化');
         return;
       }
       
-      chart = echarts.init(mainElement);
+      console.log('📊 更新图表数据:', graphData);
       
-      // 创建示例数据
-      const demoData = createDemoData();
-      currentGraphData = demoData;
+      // 清除之前的动画
+      if (animationInterval) {
+        clearInterval(animationInterval);
+      }
       
-      // 配置选项
+      // 配置图表选项
       const option = {
-        backgroundColor: 'transparent',
-        animationDurationUpdate: 1500,
-        animationEasingUpdate: 'quinticInOut',
+        backgroundColor: currentBackground,
         title: {
           text: '语义网络图',
           left: 'center',
           top: 20,
           textStyle: {
-            color: '#ffffff',
-            fontSize: 24,
+            color: '#333',
+            fontSize: 20,
             fontWeight: 'bold'
           }
         },
@@ -881,125 +516,136 @@
           trigger: 'item',
           formatter: function(params) {
             if (params.dataType === 'node') {
-              return `<div style="padding: 10px;">
+              return `<div style="font-size: 14px;">
                 <strong>${params.data.name}</strong><br/>
                 类型: ${params.data.nodeType}<br/>
-                权重: ${params.data.value}
+                连接数: ${params.data.value}
               </div>`;
             } else if (params.dataType === 'edge') {
-              return `<div style="padding: 10px;">
-                <strong>${params.data.source} → ${params.data.target}</strong><br/>
-                关系强度: ${params.data.value}
+              return `<div style="font-size: 14px;">
+                <strong>${params.data.source}</strong> → <strong>${params.data.target}</strong><br/>
+                关系: ${params.data.relation || '关联'}
               </div>`;
             }
-          },
-          backgroundColor: 'rgba(0,0,0,0.8)',
-          borderColor: '#777',
-          textStyle: {
-            color: '#fff'
           }
         },
         legend: {
-          orient: 'horizontal',
-          bottom: 20,
-          data: demoData.categories.map(cat => cat.name),
+          orient: 'vertical',
+          left: 'left',
+          top: 'center',
+          data: graphData.categories.map(cat => cat.name),
           textStyle: {
-            color: '#ffffff',
-            fontSize: 14
-          },
-          itemGap: 20
+            color: '#333'
+          }
         },
         series: [{
           name: '语义网络',
           type: 'graph',
           layout: 'force',
-          data: demoData.nodes,
-          links: demoData.links,
-          categories: demoData.categories,
+          data: graphData.nodes,
+          links: graphData.links,
+          categories: graphData.categories,
           roam: true,
-          focusNodeAdjacency: true,
-          itemStyle: {
-            borderColor: '#fff',
-            borderWidth: 2,
-            shadowBlur: 10,
-            shadowColor: 'rgba(0, 0, 0, 0.3)'
-          },
           label: {
             show: true,
-            position: 'inside',
+            position: 'right',
             formatter: '{b}',
             fontSize: 12,
-            fontWeight: 'bold',
-            color: '#fff',
-            textShadowColor: 'rgba(0, 0, 0, 0.8)',
-            textShadowBlur: 2
+            color: '#333'
+          },
+          labelLayout: {
+            hideOverlap: true
+          },
+          scaleLimit: {
+            min: 0.4,
+            max: 2
           },
           lineStyle: {
-            opacity: 0.8,
-            width: 2,
-            curveness: 0.3
+            color: 'source',
+            curveness: 0.3,
+            width: 2
           },
           emphasis: {
             focus: 'adjacency',
             lineStyle: {
-              width: 6
-            },
-            itemStyle: {
-              shadowBlur: 20,
-              shadowColor: 'rgba(0, 0, 0, 0.5)'
+              width: 4
             }
           },
           force: {
-            repulsion: 2000,
+            repulsion: 1000,
             gravity: 0.1,
-            edgeLength: [100, 200],
+            edgeLength: [50, 200],
             layoutAnimation: true
-          }
+          },
+          animationDuration: 1500,
+          animationEasing: 'cubicInOut'
         }]
       };
       
-      chart.setOption(option);
+      // 设置图表选项
+      chart.setOption(option, true);
       
-      // 启动动画效果
-      startAnimation();
+      // 启动节点动画效果
+      startNodeAnimation();
       
-      // 窗口大小改变时重新调整图表
-      window.addEventListener('resize', () => {
-        if (chart) {
-          chart.resize();
-        }
-      });
-      
-      console.log('✅ 图表初始化完成');
+      console.log('✅ 图表更新完成');
     }
     
-    // 启动动画效果
-    function startAnimation() {
+    // 启动节点动画效果
+    function startNodeAnimation() {
       if (animationInterval) {
         clearInterval(animationInterval);
       }
       
       let animationStep = 0;
       animationInterval = setInterval(() => {
-        if (chart && currentGraphData) {
-          const option = chart.getOption();
-          const series = option.series[0];
+        animationStep++;
+        
+        // 获取当前选项
+        const currentOption = chart.getOption();
+        if (!currentOption.series || !currentOption.series[0]) return;
+        
+        const series = currentOption.series[0];
+        if (!series.data) return;
+        
+        // 更新节点动画效果
+        series.data.forEach((node, index) => {
+          const phase = (animationStep + index * 10) * 0.1;
+          const scale = 1 + Math.sin(phase) * 0.1;
           
-          // 创建波动效果
-          const animatedNodes = series.data.map(node => ({
-            ...node,
-            symbolSize: node.value * 0.8 + Math.sin(animationStep * 0.1 + node.value * 0.1) * 5
-          }));
+          node.symbolSize = (node.value || 50) * scale;
           
-          chart.setOption({
-            series: [{
-              ...series,
-              data: animatedNodes
-            }]
-          }, false);
-          
-          animationStep++;
+          // 添加呼吸效果
+          if (node.itemStyle) {
+            const alpha = 0.7 + Math.sin(phase) * 0.3;
+            const color = node.itemStyle.color;
+            if (typeof color === 'string') {
+              node.itemStyle.color = color.replace(/rgba?\([^)]+\)/, 
+                color.includes('rgb') ? 
+                  color.replace(/[\d.]+\)$/, alpha + ')') : 
+                  color + Math.floor(alpha * 255).toString(16).padStart(2, '0')
+              );
+            }
+          }
+        });
+        
+        // 更新连线动画效果
+        if (series.links) {
+          series.links.forEach((link, index) => {
+            const phase = (animationStep + index * 5) * 0.05;
+            const opacity = 0.6 + Math.sin(phase) * 0.4;
+            
+            if (link.lineStyle) {
+              link.lineStyle.opacity = opacity;
+            }
+          });
         }
+        
+        // 更新图表
+        chart.setOption({
+          series: [series]
+        }, false);
+        
       }, 100);
     }
     
@@ -1008,17 +654,20 @@
       const file = event.target.files[0];
       if (!file) return;
       
-      console.log('📁 开始处理文件:', file.name);
-      showStatus('正在处理文件，请稍候...', 'info');
+      console.log('📁 选择的文件:', file.name, file.size, 'bytes');
+      
+      showStatus('正在处理文件...', 'info');
       
       const reader = new FileReader();
       reader.onload = function(e) {
         try {
+          console.log('📖 开始读取文件...');
+          
           const data = new Uint8Array(e.target.result);
-          const workbook = XLSX.read(data, {type: 'array'});
+          const workbook = XLSX.read(data, { type: 'array' });
           const firstSheetName = workbook.SheetNames[0];
           const worksheet = workbook.Sheets[firstSheetName];
-          const jsonData = XLSX.utils.sheet_to_json(worksheet, {header: 1});
+          const jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
           
           console.log('📊 解析的数据:', jsonData);
           
@@ -1162,7 +811,7 @@
       try {
         const url = chart.getDataURL({
           pixelRatio: 2,
-          backgroundColor: '#fff'
+          backgroundColor: currentBackground === 'transparent' ? '#fff' : currentBackground
         });
         
         const link = document.createElement('a');
