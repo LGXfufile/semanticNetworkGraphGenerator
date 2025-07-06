@@ -95,6 +95,7 @@
       margin-top: 20px;
       box-shadow: 0 2px 8px rgba(0,0,0,0.1);
       transition: all 0.3s ease;
+      background: #fff;
     }
     #main:hover {
       box-shadow: 0 4px 12px rgba(0,0,0,0.15);
@@ -297,6 +298,109 @@
       return colorMap[nodeType] || '#808080';
     }
     
+    // 初始化示例图表
+    function initSampleChart() {
+      if (!chart) return;
+      
+      console.log('🎨 初始化示例图表');
+      
+      // 示例数据
+      const sampleData = {
+        nodes: [
+          {id: '西湖', name: '西湖', category: 0, nodeType: '旅游地', itemStyle: {color: '#000000'}},
+          {id: '美丽', name: '美丽', category: 1, nodeType: '正面评论词', itemStyle: {color: '#87CEEB'}},
+          {id: '贵', name: '贵', category: 2, nodeType: '负面评论词', itemStyle: {color: '#FFB6C1'}},
+          {id: '自然景观', name: '自然景观', category: 3, nodeType: '旅游要素', itemStyle: {color: '#FFA500'}},
+          {id: '壮观', name: '壮观', category: 1, nodeType: '正面评论词', itemStyle: {color: '#87CEEB'}}
+        ],
+        links: [
+          {source: '西湖', target: '美丽', name: '正面评价'},
+          {source: '西湖', target: '贵', name: '负面评价'},
+          {source: '西湖', target: '自然景观', name: '包含要素'},
+          {source: '自然景观', target: '壮观', name: '正面关联'},
+          {source: '美丽', target: '壮观', name: '情感关联'}
+        ]
+      };
+      
+      // 设置图表选项
+      const option = {
+        title: {
+          text: '语义网络图示例',
+          left: 'center',
+          top: 20,
+          textStyle: { 
+            fontSize: 20, 
+            fontWeight: 'bold',
+            color: '#333'
+          }
+        },
+        tooltip: {
+          trigger: 'item',
+          formatter: function(params) {
+            if (params.dataType === 'node') {
+              return `节点: ${params.name}<br/>类型: ${params.data.nodeType}`;
+            } else {
+              return `关系: ${params.data.source} → ${params.data.target}<br/>类型: ${params.data.name}`;
+            }
+          },
+          backgroundColor: 'rgba(0,0,0,0.8)',
+          textStyle: { color: '#fff' }
+        },
+        legend: {
+          data: ['旅游地', '正面评论词', '负面评论词', '旅游要素'],
+          top: 'bottom',
+          itemGap: 20,
+          textStyle: { fontSize: 12 }
+        },
+        series: [{
+          type: 'graph',
+          layout: 'force',
+          roam: true,
+          categories: [
+            {name: '旅游地'}, 
+            {name: '正面评论词'}, 
+            {name: '负面评论词'}, 
+            {name: '旅游要素'}
+          ],
+          data: sampleData.nodes,
+          links: sampleData.links,
+          label: { 
+            show: true, 
+            position: 'right', 
+            formatter: '{b}', 
+            fontSize: 12,
+            color: '#333'
+          },
+          force: { 
+            repulsion: 500, 
+            edgeLength: 150, 
+            gravity: 0.1 
+          },
+          emphasis: { 
+            focus: 'adjacency', 
+            lineStyle: { width: 4 },
+            itemStyle: { shadowBlur: 10, shadowColor: 'rgba(0,0,0,0.3)' }
+          },
+          lineStyle: { 
+            color: 'source', 
+            curveness: 0.2, 
+            width: 2,
+            opacity: 0.7
+          },
+          itemStyle: {
+            borderColor: '#fff',
+            borderWidth: 2,
+            shadowBlur: 5,
+            shadowColor: 'rgba(0,0,0,0.2)'
+          }
+        }],
+        backgroundColor: '#fff'
+      };
+      
+      chart.setOption(option);
+      console.log('✅ 示例图表初始化完成');
+    }
+    
     // 安全的下载图片函数
     function downloadChart() {
       console.log('🖼️ 下载图片函数被调用');
@@ -348,9 +452,17 @@
         const mainElement = document.getElementById('main');
         if (mainElement) {
           chart = echarts.init(mainElement);
-          showStatus('页面加载完成，请先下载数据模版，然后上传Excel文件', 'info');
+          console.log('📊 ECharts实例创建成功');
+          
+          // 延迟初始化示例图表，确保DOM完全渲染
+          setTimeout(() => {
+            initSampleChart();
+            showStatus('页面加载完成，请先下载数据模版，然后上传Excel文件', 'info');
+          }, 100);
+          
         } else {
-          console.error('找不到main元素');
+          console.error('❌ 找不到main元素');
+          showStatus('图表容器初始化失败', 'error');
           return;
         }
         
@@ -359,61 +471,6 @@
         if (downloadBtn) {
           downloadBtn.addEventListener('click', downloadChart);
         }
-        
-        // 显示示例图表
-        const sampleData = {
-          nodes: [
-            {id: '西湖', name: '西湖', category: 0, itemStyle: {color: '#000000'}},
-            {id: '美丽', name: '美丽', category: 1, itemStyle: {color: '#87CEEB'}},
-            {id: '贵', name: '贵', category: 2, itemStyle: {color: '#FFB6C1'}},
-            {id: '自然景观', name: '自然景观', category: 3, itemStyle: {color: '#FFA500'}},
-            {id: '壮观', name: '壮观', category: 1, itemStyle: {color: '#87CEEB'}}
-          ],
-          links: [
-            {source: '西湖', target: '美丽', name: '正面评价'},
-            {source: '西湖', target: '贵', name: '负面评价'},
-            {source: '西湖', target: '自然景观', name: '包含要素'},
-            {source: '自然景观', target: '壮观', name: '正面关联'},
-            {source: '美丽', target: '壮观', name: '情感关联'}
-          ]
-        };
-        
-        chart.setOption({
-          title: {
-            text: '语义网络图示例',
-            left: 'center',
-            textStyle: { fontSize: 20, fontWeight: 'bold' }
-          },
-          tooltip: {
-            trigger: 'item',
-            formatter: function(params) {
-              if (params.dataType === 'node') {
-                return `节点: ${params.name}<br/>类型: ${params.data.nodeType || '示例节点'}`;
-              } else {
-                return `关系: ${params.data.source} → ${params.data.target}<br/>类型: ${params.data.name}`;
-              }
-            }
-          },
-          legend: {
-            data: ['旅游地', '正面评论词', '负面评论词', '旅游要素'],
-            top: 'bottom',
-            itemGap: 20
-          },
-          series: [{
-            type: 'graph',
-            layout: 'force',
-            roam: true,
-            categories: [
-              {name: '旅游地'}, {name: '正面评论词'}, {name: '负面评论词'}, {name: '旅游要素'}
-            ],
-            data: sampleData.nodes,
-            links: sampleData.links,
-            label: { show: true, position: 'right', formatter: '{b}', fontSize: 12 },
-            force: { repulsion: 400, edgeLength: 200, gravity: 0.1 },
-            emphasis: { focus: 'adjacency', lineStyle: { width: 3 } },
-            lineStyle: { color: 'source', curveness: 0.1, width: 2 }
-          }]
-        });
         
         // 设置文件上传处理
         const fileInput = document.getElementById('file');
@@ -573,6 +630,13 @@
             reader.readAsArrayBuffer(file);
           });
         }
+        
+        // 监听窗口大小变化，自动调整图表大小
+        window.addEventListener('resize', function() {
+          if (chart) {
+            chart.resize();
+          }
+        });
         
       } catch (error) {
         showStatus('页面初始化失败: ' + error.message, 'error');
