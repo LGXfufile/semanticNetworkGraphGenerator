@@ -41,41 +41,39 @@
       cursor: pointer;
       font-size: 16px;
       font-weight: 500;
-      transition: all 0.3s ease;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
       text-decoration: none;
       display: inline-block;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+    }
+    .btn:active {
+      transform: translateY(0);
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
     }
     .btn-primary {
-      background: #007bff;
+      background: linear-gradient(135deg, #007bff, #0056b3);
       color: white;
     }
     .btn-primary:hover {
-      background: #0056b3;
-      transform: translateY(-2px);
+      background: linear-gradient(135deg, #0056b3, #004085);
     }
     .btn-success {
-      background: #28a745;
+      background: linear-gradient(135deg, #28a745, #1e7e34);
       color: white;
     }
     .btn-success:hover {
-      background: #1e7e34;
-      transform: translateY(-2px);
+      background: linear-gradient(135deg, #1e7e34, #155724);
     }
     .btn-info {
-      background: #17a2b8;
+      background: linear-gradient(135deg, #17a2b8, #138496);
       color: white;
     }
     .btn-info:hover {
-      background: #138496;
-      transform: translateY(-2px);
-    }
-    .btn-warning {
-      background: #ffc107;
-      color: #212529;
-    }
-    .btn-warning:hover {
-      background: #e0a800;
-      transform: translateY(-2px);
+      background: linear-gradient(135deg, #138496, #0f6674);
     }
     #file {
       margin: 10px 0;
@@ -83,6 +81,11 @@
       border: 2px solid #ddd;
       border-radius: 4px;
       font-size: 16px;
+      transition: all 0.3s ease;
+    }
+    #file:hover {
+      border-color: #007bff;
+      box-shadow: 0 0 0 2px rgba(0,123,255,0.1);
     }
     #main {
       width: 100%;
@@ -91,6 +94,10 @@
       border-radius: 8px;
       margin-top: 20px;
       box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      transition: all 0.3s ease;
+    }
+    #main:hover {
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
     }
     #status {
       margin-top: 15px;
@@ -102,6 +109,7 @@
       padding: 12px;
       border-radius: 6px;
       margin: 10px 0;
+      animation: fadeIn 0.3s ease-in-out;
     }
     .status.success {
       background: #d4edda;
@@ -118,11 +126,32 @@
       color: #0c5460;
       border: 1px solid #bee5eb;
     }
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(-10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
     h1 {
       color: #333;
       text-align: center;
       margin-bottom: 30px;
       font-size: 28px;
+      animation: slideInDown 0.5s ease-out;
+    }
+    @keyframes slideInDown {
+      from {
+        opacity: 0;
+        transform: translateY(-30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
     }
     .description {
       text-align: center;
@@ -130,6 +159,10 @@
       margin-bottom: 30px;
       font-size: 16px;
       line-height: 1.6;
+      animation: fadeIn 0.5s ease-out 0.2s both;
+    }
+    .upload-section {
+      animation: fadeIn 0.5s ease-out 0.4s both;
     }
     .footer {
       text-align: center;
@@ -138,6 +171,7 @@
       border-top: 1px solid #eee;
       color: #999;
       font-size: 14px;
+      animation: fadeIn 0.5s ease-out 0.6s both;
     }
   </style>
 </head>
@@ -153,7 +187,6 @@
         <button class="btn btn-info" onclick="downloadTemplate()">📥 下载数据模版</button>
         <input type="file" id="file" accept=".xlsx,.xls" class="btn">
         <button class="btn btn-success" id="download" style="display:none;">🖼️ 下载图片</button>
-        <button class="btn btn-warning" onclick="testNotification()">🔔 测试通知</button>
       </div>
       <div id="status"></div>
     </div>
@@ -222,28 +255,13 @@
         
         if (result.success) {
           console.log('✅ 通知发送成功');
-          showStatus('✅ 通知发送成功！', 'success');
         } else {
           console.error('❌ 通知发送失败:', result);
-          showStatus('❌ 通知发送失败', 'error');
         }
       } catch (error) {
         console.error('🚨 通知发送异常:', error);
-        showStatus('🚨 通知发送异常: ' + error.message, 'error');
+        // 静默处理通知错误，不显示给用户
       }
-    }
-    
-    // 测试通知函数 - 使用全局函数
-    function testNotification() {
-      console.log('🔔 测试通知函数被调用');
-      showStatus('正在发送测试通知...', 'info');
-      
-      sendNotification('upload', {
-        fileName: '测试文件.xlsx',
-        nodeCount: 10,
-        linkCount: 15,
-        dataRows: 20
-      });
     }
     
     // 下载数据模版 - 使用全局函数
