@@ -132,11 +132,35 @@
   </div>
 
   <!-- 将原来的CDN链接替换为国内CDN -->
-  <script src="https://cdn.bootcdn.net/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
-  <script src="https://cdn.bootcdn.net/ajax/libs/echarts/5.4.3/echarts.min.js"></script>
+  <script src="https://cdn.staticfile.org/xlsx/0.18.5/xlsx.full.min.js"></script>
+  <script src="https://cdn.staticfile.org/echarts/5.4.3/echarts.min.js"></script>
   
   <script>
     let chart = null;
+    let currentGraphData = null; // 存储当前图表数据
+    
+    // 发送通知函数
+    async function sendNotification(action, fileInfo = {}) {
+      try {
+        await fetch('/api/notify', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            action: action,
+            userInfo: {
+              userAgent: navigator.userAgent,
+              timestamp: new Date().toISOString()
+            },
+            fileInfo: fileInfo
+          })
+        });
+      } catch (error) {
+        console.log('通知发送失败:', error);
+        // 不影响用户正常使用
+      }
+    }
     
     // 模版数据
     const templateData = [
@@ -155,13 +179,8 @@
         const wb = XLSX.utils.book_new();
         XLSX.utils.book_append_sheet(wb, ws, '数据模版');
         
-        // 设置列宽
         const colWidths = [
-          { wch: 15 }, // 节点A
-          { wch: 15 }, // 节点B
-          { wch: 12 }, // 关系类型
-          { wch: 15 }, // 节点A类型
-          { wch: 15 }  // 节点B类型
+          { wch: 15 }, { wch: 15 }, { wch: 12 }, { wch: 15 }, { wch: 15 }
         ];
         ws['!cols'] = colWidths;
         
@@ -180,7 +199,6 @@
       }
     }
     
-    // 根据节点类型获取颜色
     function getNodeColor(nodeType) {
       const colorMap = {
         '旅游地': '#000000',
@@ -192,9 +210,8 @@
       return colorMap[nodeType] || '#808080';
     }
     
-    // 等待页面加载完成
+    // 页面加载完成
     document.addEventListener('DOMContentLoaded', function() {
-      // 初始化图表
       try {
         chart = echarts.init(document.getElementById('main'));
         showStatus('页面加载完成，请先下载数据模版，然后上传Excel文件', 'info');
@@ -221,10 +238,7 @@
           title: {
             text: '语义网络图示例',
             left: 'center',
-            textStyle: {
-              fontSize: 20,
-              fontWeight: 'bold'
-            }
+            textStyle: { fontSize: 20, fontWeight: 'bold' }
           },
           tooltip: {
             trigger: 'item',
@@ -246,35 +260,14 @@
             layout: 'force',
             roam: true,
             categories: [
-              {name: '旅游地'},
-              {name: '正面评论词'},
-              {name: '负面评论词'},
-              {name: '旅游要素'}
+              {name: '旅游地'}, {name: '正面评论词'}, {name: '负面评论词'}, {name: '旅游要素'}
             ],
             data: sampleData.nodes,
             links: sampleData.links,
-            label: {
-              show: true,
-              position: 'right',
-              formatter: '{b}',
-              fontSize: 12
-            },
-            force: {
-              repulsion: 400,
-              edgeLength: 200,
-              gravity: 0.1
-            },
-            emphasis: {
-              focus: 'adjacency',
-              lineStyle: {
-                width: 3
-              }
-            },
-            lineStyle: {
-              color: 'source',
-              curveness: 0.1,
-              width: 2
-            }
+            label: { show: true, position: 'right', formatter: '{b}', fontSize: 12 },
+            force: { repulsion: 400, edgeLength: 200, gravity: 0.1 },
+            emphasis: { focus: 'adjacency', lineStyle: { width: 3 } },
+            lineStyle: { color: 'source', curveness: 0.1, width: 2 }
           }]
         });
         
@@ -326,7 +319,7 @@
           // 解析数据
           let nodes = {}, links = [];
           let categories = new Set();
-          let nodeTypes = {}; // 存储节点类型
+          let nodeTypes = {};
           
           json.forEach((row, i) => {
             if (i === 0) return; // 跳过表头
@@ -348,33 +341,20 @@
             // 创建节点
             if (!nodes[nodeA]) {
               nodes[nodeA] = {
-                id: nodeA,
-                name: nodeA,
-                category: nodeAType,
-                nodeType: nodeAType,
-                itemStyle: {
-                  color: getNodeColor(nodeAType)
-                }
+                id: nodeA, name: nodeA, category: nodeAType, nodeType: nodeAType,
+                itemStyle: { color: getNodeColor(nodeAType) }
               };
             }
             if (!nodes[nodeB]) {
               nodes[nodeB] = {
-                id: nodeB,
-                name: nodeB,
-                category: nodeBType,
-                nodeType: nodeBType,
-                itemStyle: {
-                  color: getNodeColor(nodeBType)
-                }
+                id: nodeB, name: nodeB, category: nodeBType, nodeType: nodeBType,
+                itemStyle: { color: getNodeColor(nodeBType) }
               };
             }
             
             // 创建连接
             links.push({
-              source: nodeA,
-              target: nodeB,
-              name: relationType || '关联',
-              value: relationType
+              source: nodeA, target: nodeB, name: relationType || '关联', value: relationType
             });
           });
           
@@ -385,15 +365,19 @@
           
           const categoryArray = Array.from(categories).map(cat => ({name: cat}));
           
+          // 保存当前图表数据
+          currentGraphData = {
+            nodeCount: Object.keys(nodes).length,
+            linkCount: links.length,
+            dataRows: json.length - 1
+          };
+          
           // 更新图表
           chart.setOption({
             title: {
               text: '语义网络图',
               left: 'center',
-              textStyle: {
-                fontSize: 20,
-                fontWeight: 'bold'
-              }
+              textStyle: { fontSize: 20, fontWeight: 'bold' }
             },
             tooltip: {
               trigger: 'item',
@@ -417,33 +401,18 @@
               categories: categoryArray,
               data: Object.values(nodes),
               links: links,
-              label: {
-                show: true,
-                position: 'right',
-                formatter: '{b}',
-                fontSize: 12
-              },
-              force: {
-                repulsion: 400,
-                edgeLength: 200,
-                gravity: 0.1
-              },
-              emphasis: {
-                focus: 'adjacency',
-                lineStyle: {
-                  width: 3
-                }
-              },
-              lineStyle: {
-                color: 'source',
-                curveness: 0.1,
-                width: 2
-              }
+              label: { show: true, position: 'right', formatter: '{b}', fontSize: 12 },
+              force: { repulsion: 400, edgeLength: 200, gravity: 0.1 },
+              emphasis: { focus: 'adjacency', lineStyle: { width: 3 } },
+              lineStyle: { color: 'source', curveness: 0.1, width: 2 }
             }]
           });
           
           showStatus(`✅ 成功生成网络图！节点数: ${Object.keys(nodes).length}, 边数: ${links.length}`, 'success');
           document.getElementById('download').style.display = 'inline-block';
+          
+          // 发送上传通知
+          sendNotification('upload', currentGraphData);
           
         } catch (error) {
           showStatus('文件解析失败: ' + error.message + '。请确保使用正确的Excel格式', 'error');
@@ -472,6 +441,10 @@
         a.click();
         document.body.removeChild(a);
         showStatus('🖼️ 图片下载成功！', 'success');
+        
+        // 发送下载通知
+        sendNotification('download', currentGraphData);
+        
       } catch (error) {
         showStatus('图片下载失败: ' + error.message, 'error');
       }
