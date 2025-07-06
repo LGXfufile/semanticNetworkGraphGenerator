@@ -5,12 +5,19 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>语义网络图生成器</title>
   <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
     body {
       font-family: Arial, sans-serif;
-      margin: 20px;
-      padding: 20px;
       background-color: #f5f5f5;
+      min-height: 100vh;
+      padding: 20px;
     }
+    
     .container {
       max-width: 1200px;
       margin: 0 auto;
@@ -18,8 +25,18 @@
       padding: 30px;
       border-radius: 10px;
       box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      min-height: calc(100vh - 40px);
+      display: flex;
+      flex-direction: column;
     }
+    
+    .header {
+      flex-shrink: 0;
+      margin-bottom: 30px;
+    }
+    
     .upload-section {
+      flex-shrink: 0;
       margin-bottom: 30px;
       padding: 25px;
       border: 2px dashed #007bff;
@@ -27,6 +44,7 @@
       text-align: center;
       background: #f8f9ff;
     }
+    
     .button-group {
       display: flex;
       gap: 15px;
@@ -34,6 +52,7 @@
       align-items: center;
       flex-wrap: wrap;
     }
+    
     .btn {
       padding: 12px 24px;
       border: none;
@@ -46,35 +65,44 @@
       display: inline-block;
       box-shadow: 0 2px 4px rgba(0,0,0,0.1);
     }
+    
     .btn:hover {
       transform: translateY(-2px);
       box-shadow: 0 4px 8px rgba(0,0,0,0.15);
     }
+    
     .btn:active {
       transform: translateY(0);
       box-shadow: 0 2px 4px rgba(0,0,0,0.1);
     }
+    
     .btn-primary {
       background: linear-gradient(135deg, #007bff, #0056b3);
       color: white;
     }
+    
     .btn-primary:hover {
       background: linear-gradient(135deg, #0056b3, #004085);
     }
+    
     .btn-success {
       background: linear-gradient(135deg, #28a745, #1e7e34);
       color: white;
     }
+    
     .btn-success:hover {
       background: linear-gradient(135deg, #1e7e34, #155724);
     }
+    
     .btn-info {
       background: linear-gradient(135deg, #17a2b8, #138496);
       color: white;
     }
+    
     .btn-info:hover {
       background: linear-gradient(135deg, #138496, #0f6674);
     }
+    
     #file {
       margin: 10px 0;
       padding: 10px;
@@ -83,50 +111,68 @@
       font-size: 16px;
       transition: all 0.3s ease;
     }
+    
     #file:hover {
       border-color: #007bff;
       box-shadow: 0 0 0 2px rgba(0,123,255,0.1);
     }
+    
+    .chart-container {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      min-height: 0;
+    }
+    
     #main {
       width: 100%;
-      height: 600px;
+      height: 500px;
+      min-height: 400px;
       border: 1px solid #ddd;
       border-radius: 8px;
       margin-top: 20px;
       box-shadow: 0 2px 8px rgba(0,0,0,0.1);
       transition: all 0.3s ease;
       background: #fff;
+      flex: 1;
     }
+    
     #main:hover {
       box-shadow: 0 4px 12px rgba(0,0,0,0.15);
     }
+    
     #status {
       margin-top: 15px;
       padding: 10px;
       border-radius: 4px;
       font-weight: 500;
     }
+    
     .status {
       padding: 12px;
       border-radius: 6px;
       margin: 10px 0;
       animation: fadeIn 0.3s ease-in-out;
     }
+    
     .status.success {
       background: #d4edda;
       color: #155724;
       border: 1px solid #c3e6cb;
     }
+    
     .status.error {
       background: #f8d7da;
       color: #721c24;
       border: 1px solid #f5c6cb;
     }
+    
     .status.info {
       background: #d1ecf1;
       color: #0c5460;
       border: 1px solid #bee5eb;
     }
+    
     @keyframes fadeIn {
       from {
         opacity: 0;
@@ -137,13 +183,15 @@
         transform: translateY(0);
       }
     }
+    
     h1 {
       color: #333;
       text-align: center;
-      margin-bottom: 30px;
+      margin-bottom: 20px;
       font-size: 28px;
       animation: slideInDown 0.5s ease-out;
     }
+    
     @keyframes slideInDown {
       from {
         opacity: 0;
@@ -154,6 +202,7 @@
         transform: translateY(0);
       }
     }
+    
     .description {
       text-align: center;
       color: #666;
@@ -162,10 +211,13 @@
       line-height: 1.6;
       animation: fadeIn 0.5s ease-out 0.2s both;
     }
+    
     .upload-section {
       animation: fadeIn 0.5s ease-out 0.4s both;
     }
+    
     .footer {
+      flex-shrink: 0;
       text-align: center;
       margin-top: 30px;
       padding-top: 20px;
@@ -174,6 +226,7 @@
       font-size: 14px;
       animation: fadeIn 0.5s ease-out 0.6s both;
     }
+    
     .debug-info {
       margin-top: 10px;
       padding: 10px;
@@ -183,14 +236,75 @@
       color: #666;
       text-align: left;
     }
+    
+    /* 响应式设计 */
+    @media (max-width: 768px) {
+      body {
+        padding: 10px;
+      }
+      
+      .container {
+        padding: 20px;
+        min-height: calc(100vh - 20px);
+      }
+      
+      h1 {
+        font-size: 24px;
+      }
+      
+      .description {
+        font-size: 14px;
+      }
+      
+      .button-group {
+        flex-direction: column;
+        gap: 10px;
+      }
+      
+      .btn {
+        width: 100%;
+        max-width: 300px;
+      }
+      
+      #main {
+        height: 400px;
+      }
+    }
+    
+    @media (max-width: 480px) {
+      .container {
+        padding: 15px;
+      }
+      
+      h1 {
+        font-size: 20px;
+      }
+      
+      #main {
+        height: 350px;
+      }
+    }
+    
+    /* 确保在所有缩放级别下都能正常显示 */
+    @media (min-width: 1400px) {
+      .container {
+        max-width: 1400px;
+      }
+      
+      #main {
+        height: 600px;
+      }
+    }
   </style>
 </head>
 <body>
   <div class="container">
-    <h1>🌐 语义网络图生成器</h1>
-    <p class="description">
-      上传Excel文件，自动生成美观的语义网络图。支持节点分类、关系展示和图片导出功能。
-    </p>
+    <div class="header">
+      <h1>🌐 语义网络图生成器</h1>
+      <p class="description">
+        上传Excel文件，自动生成美观的语义网络图。支持节点分类、关系展示和图片导出功能。
+      </p>
+    </div>
     
     <div class="upload-section">
       <div class="button-group">
@@ -201,7 +315,9 @@
       <div id="status"></div>
     </div>
     
-    <div id="main"></div>
+    <div class="chart-container">
+      <div id="main"></div>
+    </div>
     
     <div class="footer">
       <p>支持的格式：Excel (.xlsx, .xls) | 生成高质量PNG图片</p>
@@ -357,7 +473,7 @@
           left: 'center',
           top: 20,
           textStyle: { 
-            fontSize: 20, 
+            fontSize: 18, 
             fontWeight: 'bold',
             color: '#333'
           }
@@ -376,9 +492,9 @@
         },
         legend: {
           data: ['旅游地', '正面评论词', '负面评论词', '旅游要素'],
-          top: 'bottom',
-          itemGap: 20,
-          textStyle: { fontSize: 12 }
+          bottom: 10,
+          itemGap: 15,
+          textStyle: { fontSize: 11 }
         },
         series: [{
           type: 'graph',
@@ -396,29 +512,29 @@
             show: true, 
             position: 'right', 
             formatter: '{b}', 
-            fontSize: 12,
+            fontSize: 11,
             color: '#333'
           },
           force: { 
-            repulsion: 500, 
-            edgeLength: 150, 
+            repulsion: 400, 
+            edgeLength: 120, 
             gravity: 0.1 
           },
           emphasis: { 
             focus: 'adjacency', 
-            lineStyle: { width: 4 },
-            itemStyle: { shadowBlur: 10, shadowColor: 'rgba(0,0,0,0.3)' }
+            lineStyle: { width: 3 },
+            itemStyle: { shadowBlur: 8, shadowColor: 'rgba(0,0,0,0.3)' }
           },
           lineStyle: { 
             color: 'source', 
-            curveness: 0.2, 
+            curveness: 0.1, 
             width: 2,
             opacity: 0.7
           },
           itemStyle: {
             borderColor: '#fff',
             borderWidth: 2,
-            shadowBlur: 5,
+            shadowBlur: 3,
             shadowColor: 'rgba(0,0,0,0.2)'
           }
         }],
@@ -623,7 +739,7 @@
               left: 'center',
               top: 20,
               textStyle: { 
-                fontSize: 20, 
+                fontSize: 18, 
                 fontWeight: 'bold',
                 color: '#333'
               }
@@ -642,9 +758,9 @@
             },
             legend: {
               data: categoryArray.map(c => c.name),
-              top: 'bottom',
-              itemGap: 20,
-              textStyle: { fontSize: 12 }
+              bottom: 10,
+              itemGap: 15,
+              textStyle: { fontSize: 11 }
             },
             series: [{
               type: 'graph',
@@ -657,29 +773,29 @@
                 show: true, 
                 position: 'right', 
                 formatter: '{b}', 
-                fontSize: 12,
+                fontSize: 11,
                 color: '#333'
               },
               force: { 
-                repulsion: 500, 
-                edgeLength: 150, 
+                repulsion: 400, 
+                edgeLength: 120, 
                 gravity: 0.1 
               },
               emphasis: { 
                 focus: 'adjacency', 
-                lineStyle: { width: 4 },
-                itemStyle: { shadowBlur: 10, shadowColor: 'rgba(0,0,0,0.3)' }
+                lineStyle: { width: 3 },
+                itemStyle: { shadowBlur: 8, shadowColor: 'rgba(0,0,0,0.3)' }
               },
               lineStyle: { 
                 color: 'source', 
-                curveness: 0.2, 
+                curveness: 0.1, 
                 width: 2,
                 opacity: 0.7
               },
               itemStyle: {
                 borderColor: '#fff',
                 borderWidth: 2,
-                shadowBlur: 5,
+                shadowBlur: 3,
                 shadowColor: 'rgba(0,0,0,0.2)'
               }
             }],
