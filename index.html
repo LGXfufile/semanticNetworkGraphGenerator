@@ -31,50 +31,58 @@
       display: flex;
       gap: 15px;
       justify-content: center;
+      align-items: center;
       flex-wrap: wrap;
-      margin: 20px 0;
     }
     .btn {
       padding: 12px 24px;
       border: none;
       border-radius: 6px;
       cursor: pointer;
-      font-size: 14px;
+      font-size: 16px;
       font-weight: 500;
       transition: all 0.3s ease;
       text-decoration: none;
       display: inline-block;
     }
     .btn-primary {
-      background-color: #007bff;
+      background: #007bff;
       color: white;
     }
     .btn-primary:hover {
-      background-color: #0056b3;
+      background: #0056b3;
       transform: translateY(-2px);
     }
     .btn-success {
-      background-color: #28a745;
+      background: #28a745;
       color: white;
     }
     .btn-success:hover {
-      background-color: #218838;
+      background: #1e7e34;
       transform: translateY(-2px);
     }
     .btn-info {
-      background-color: #17a2b8;
+      background: #17a2b8;
       color: white;
     }
     .btn-info:hover {
-      background-color: #138496;
+      background: #138496;
+      transform: translateY(-2px);
+    }
+    .btn-warning {
+      background: #ffc107;
+      color: #212529;
+    }
+    .btn-warning:hover {
+      background: #e0a800;
       transform: translateY(-2px);
     }
     #file {
-      margin: 15px;
+      margin: 10px 0;
       padding: 10px;
-      border: 1px solid #ddd;
+      border: 2px solid #ddd;
       border-radius: 4px;
-      font-size: 14px;
+      font-size: 16px;
     }
     #main {
       width: 100%;
@@ -82,61 +90,87 @@
       border: 1px solid #ddd;
       border-radius: 8px;
       margin-top: 20px;
-      background: white;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
     }
-    .status {
-      margin: 15px 0;
-      padding: 15px;
-      border-radius: 6px;
+    #status {
+      margin-top: 15px;
+      padding: 10px;
+      border-radius: 4px;
       font-weight: 500;
     }
+    .status {
+      padding: 12px;
+      border-radius: 6px;
+      margin: 10px 0;
+    }
     .status.success {
-      background-color: #d4edda;
+      background: #d4edda;
       color: #155724;
       border: 1px solid #c3e6cb;
     }
     .status.error {
-      background-color: #f8d7da;
+      background: #f8d7da;
       color: #721c24;
       border: 1px solid #f5c6cb;
     }
     .status.info {
-      background-color: #d1ecf1;
+      background: #d1ecf1;
       color: #0c5460;
       border: 1px solid #bee5eb;
+    }
+    h1 {
+      color: #333;
+      text-align: center;
+      margin-bottom: 30px;
+      font-size: 28px;
+    }
+    .description {
+      text-align: center;
+      color: #666;
+      margin-bottom: 30px;
+      font-size: 16px;
+      line-height: 1.6;
+    }
+    .footer {
+      text-align: center;
+      margin-top: 30px;
+      padding-top: 20px;
+      border-top: 1px solid #eee;
+      color: #999;
+      font-size: 14px;
     }
   </style>
 </head>
 <body>
   <div class="container">
     <h1>🌐 语义网络图生成器</h1>
-    <p>上传Excel文件，自动生成可交互的语义网络图，支持下载图片到本地</p>
+    <p class="description">
+      上传Excel文件，自动生成美观的语义网络图。支持节点分类、关系展示和图片导出功能。
+    </p>
     
     <div class="upload-section">
-      <h3>📁 文件上传</h3>
-      <p>请先下载数据模版，按照格式填写数据后上传</p>
-      
       <div class="button-group">
-        <button class="btn btn-info" onclick="downloadTemplate()">
-          📥 下载数据模版
-        </button>
-        <input type="file" id="file" accept=".xlsx,.xls" />
-        <button class="btn btn-success" id="download" style="display: none;">
-          🖼️ 下载图片
-        </button>
+        <button class="btn btn-info" onclick="downloadTemplate()">📥 下载数据模版</button>
+        <input type="file" id="file" accept=".xlsx,.xls" class="btn">
+        <button class="btn btn-success" id="download" style="display:none;">🖼️ 下载图片</button>
+        <button class="btn btn-warning" onclick="testNotification()">🔔 测试通知</button>
       </div>
+      <div id="status"></div>
     </div>
     
-    <div id="status"></div>
     <div id="main"></div>
+    
+    <div class="footer">
+      <p>支持的格式：Excel (.xlsx, .xls) | 生成高质量PNG图片</p>
+      <p>© 2025 语义网络图生成器 - 让数据可视化更简单</p>
+    </div>
   </div>
 
-  <!-- 将原来的CDN链接替换为国内CDN -->
-  <script src="https://cdn.staticfile.org/xlsx/0.18.5/xlsx.full.min.js"></script>
-  <script src="https://cdn.staticfile.org/echarts/5.4.3/echarts.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
   
   <script>
-    let chart = null;
+    let chart;
     let currentGraphData = null; // 存储当前图表数据
     
     // 修复后的通知发送函数
@@ -144,8 +178,8 @@
       try {
         console.log('🔔 发送通知:', action, fileInfo);
         
-        // 使用绝对路径，确保请求发送到正确的域名
-        const apiUrl = 'https://semnetworkgraph.store/api/notify';
+        // 使用相对路径，避免域名问题
+        const apiUrl = '/api/notify';
         
         const response = await fetch(apiUrl, {
           method: 'POST',
@@ -160,6 +194,10 @@
 
         console.log('📡 API响应状态:', response.status);
         
+        if (!response.ok) {
+          throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+        }
+        
         const result = await response.json();
         console.log('📋 API响应内容:', result);
         
@@ -170,6 +208,7 @@
         }
       } catch (error) {
         console.error('🚨 通知发送异常:', error);
+        // 不显示错误给用户，避免影响用户体验
       }
     }
     
@@ -390,6 +429,7 @@
           
           // 保存当前图表数据
           currentGraphData = {
+            fileName: file.name,
             nodeCount: Object.keys(nodes).length,
             linkCount: links.length,
             dataRows: json.length - 1
