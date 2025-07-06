@@ -150,10 +150,10 @@
     
     <div class="upload-section">
       <div class="button-group">
-        <button class="btn btn-info" id="templateBtn">📥 下载数据模版</button>
+        <button class="btn btn-info" onclick="downloadTemplate()">📥 下载数据模版</button>
         <input type="file" id="file" accept=".xlsx,.xls" class="btn">
         <button class="btn btn-success" id="download" style="display:none;">🖼️ 下载图片</button>
-        <button class="btn btn-warning" id="testBtn">🔔 测试通知</button>
+        <button class="btn btn-warning" onclick="testNotification()">🔔 测试通知</button>
       </div>
       <div id="status"></div>
     </div>
@@ -170,8 +170,6 @@
   <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
   
   <script>
-    console.log('🚀 脚本开始加载...');
-    
     // 全局变量
     let chart;
     let currentGraphData = null;
@@ -188,15 +186,12 @@
     
     // 显示状态信息
     function showStatus(message, type = 'info') {
-      console.log(`📋 状态更新: ${message} (${type})`);
       const statusDiv = document.getElementById('status');
       if (statusDiv) {
         statusDiv.innerHTML = `<div class="status ${type}">${message}</div>`;
         if (type === 'error') {
           console.error(message);
         }
-      } else {
-        console.error('找不到status元素');
       }
     }
     
@@ -238,9 +233,9 @@
       }
     }
     
-    // 测试通知函数
+    // 测试通知函数 - 使用全局函数
     function testNotification() {
-      console.log('🔔 测试通知函数被调用!!!');
+      console.log('🔔 测试通知函数被调用');
       showStatus('正在发送测试通知...', 'info');
       
       sendNotification('upload', {
@@ -249,11 +244,9 @@
         linkCount: 15,
         dataRows: 20
       });
-      
-      console.log('🔔 测试通知函数执行完成');
     }
     
-    // 下载数据模版
+    // 下载数据模版 - 使用全局函数
     function downloadTemplate() {
       console.log('📥 下载模版函数被调用');
       try {
@@ -301,15 +294,21 @@
           backgroundColor: '#fff'
         });
         
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = 'semantic-network-graph.png';
-        a.style.display = 'none';
+        // 创建临时链接进行下载
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = 'semantic-network-graph.png';
         
-        // 安全地添加和移除元素
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
+        // 触发下载
+        document.body.appendChild(link);
+        link.click();
+        
+        // 清理
+        setTimeout(() => {
+          if (document.body.contains(link)) {
+            document.body.removeChild(link);
+          }
+        }, 100);
         
         showStatus('🖼️ 图片下载成功！', 'success');
         
@@ -322,57 +321,9 @@
       }
     }
     
-    // 立即尝试绑定事件（不等待DOMContentLoaded）
-    function bindEvents() {
-      console.log('🔗 开始绑定事件...');
-      
-      const testBtn = document.getElementById('testBtn');
-      console.log('🔍 测试按钮元素:', testBtn);
-      
-      if (testBtn) {
-        console.log('✅ 找到测试按钮，绑定事件');
-        testBtn.addEventListener('click', function() {
-          console.log('🎯 测试按钮被点击！');
-          testNotification();
-        });
-        
-        // 额外添加一个点击测试
-        testBtn.onclick = function() {
-          console.log('🎯 测试按钮onclick被触发！');
-          testNotification();
-        };
-      } else {
-        console.error('❌ 找不到测试按钮');
-      }
-      
-      const templateBtn = document.getElementById('templateBtn');
-      console.log('🔍 模版按钮元素:', templateBtn);
-      
-      if (templateBtn) {
-        console.log('✅ 找到模版按钮，绑定事件');
-        templateBtn.addEventListener('click', function() {
-          console.log('🎯 模版按钮被点击！');
-          downloadTemplate();
-        });
-      } else {
-        console.error('❌ 找不到模版按钮');
-      }
-      
-      const downloadBtn = document.getElementById('download');
-      if (downloadBtn) {
-        downloadBtn.addEventListener('click', function() {
-          console.log('🎯 下载按钮被点击！');
-          downloadChart();
-        });
-      }
-    }
-    
-    // 页面加载完成后执行
-    document.addEventListener('DOMContentLoaded', function() {
-      console.log('🚀 DOMContentLoaded 事件触发');
-      
-      // 再次绑定事件
-      bindEvents();
+    // 等待DOM完全加载
+    window.addEventListener('load', function() {
+      console.log('🚀 页面完全加载完成');
       
       try {
         // 初始化图表
@@ -383,6 +334,12 @@
         } else {
           console.error('找不到main元素');
           return;
+        }
+        
+        // 绑定下载按钮事件
+        const downloadBtn = document.getElementById('download');
+        if (downloadBtn) {
+          downloadBtn.addEventListener('click', downloadChart);
         }
         
         // 显示示例图表
@@ -451,8 +408,144 @@
             
             const reader = new FileReader();
             reader.onload = function(evt) {
-              // 文件处理逻辑保持不变...
-              console.log('文件读取完成');
+              try {
+                const data = new Uint8Array(evt.target.result);
+                const workbook = XLSX.read(data, {type: 'array'});
+                
+                if (workbook.SheetNames.length === 0) {
+                  showStatus('Excel 文件中没有找到工作表', 'error');
+                  return;
+                }
+                
+                const sheet = workbook.Sheets[workbook.SheetNames[0]];
+                const json = XLSX.utils.sheet_to_json(sheet, {header: 1});
+                
+                if (json.length < 2) {
+                  showStatus('Excel 文件数据不足，至少需要表头和一行数据。请下载数据模版参考格式', 'error');
+                  return;
+                }
+                
+                // 验证表头格式
+                const headers = json[0];
+                const expectedHeaders = ['节点A', '节点B', '关系类型', '节点A类型', '节点B类型'];
+                const headersMatch = expectedHeaders.every((header, index) => 
+                  headers[index] && headers[index].toString().trim() === header
+                );
+                
+                if (!headersMatch) {
+                  showStatus('表头格式不正确，请使用标准模版。应包含：节点A, 节点B, 关系类型, 节点A类型, 节点B类型', 'error');
+                  return;
+                }
+                
+                showStatus('正在生成网络图...', 'info');
+                
+                // 解析数据
+                let nodes = {}, links = [];
+                let categories = new Set();
+                let nodeTypes = {};
+                
+                json.forEach((row, i) => {
+                  if (i === 0) return; // 跳过表头
+                  if (!row || row.length < 5) return; // 跳过数据不完整的行
+                  
+                  const [nodeA, nodeB, relationType, nodeAType, nodeBType] = row.map(cell => 
+                    cell ? cell.toString().trim() : ''
+                  );
+                  
+                  if (!nodeA || !nodeB || !nodeAType || !nodeBType) return; // 跳过空值
+                  
+                  // 记录节点类型
+                  nodeTypes[nodeA] = nodeAType;
+                  nodeTypes[nodeB] = nodeBType;
+                  
+                  categories.add(nodeAType);
+                  categories.add(nodeBType);
+                  
+                  // 创建节点
+                  if (!nodes[nodeA]) {
+                    nodes[nodeA] = {
+                      id: nodeA, name: nodeA, category: nodeAType, nodeType: nodeAType,
+                      itemStyle: { color: getNodeColor(nodeAType) }
+                    };
+                  }
+                  if (!nodes[nodeB]) {
+                    nodes[nodeB] = {
+                      id: nodeB, name: nodeB, category: nodeBType, nodeType: nodeBType,
+                      itemStyle: { color: getNodeColor(nodeBType) }
+                    };
+                  }
+                  
+                  // 创建连接
+                  links.push({
+                    source: nodeA, target: nodeB, name: relationType || '关联', value: relationType
+                  });
+                });
+                
+                if (Object.keys(nodes).length === 0) {
+                  showStatus('没有找到有效的节点数据，请检查数据格式', 'error');
+                  return;
+                }
+                
+                const categoryArray = Array.from(categories).map(cat => ({name: cat}));
+                
+                // 保存当前图表数据
+                currentGraphData = {
+                  fileName: file.name,
+                  nodeCount: Object.keys(nodes).length,
+                  linkCount: links.length,
+                  dataRows: json.length - 1
+                };
+                
+                // 更新图表
+                chart.setOption({
+                  title: {
+                    text: '语义网络图',
+                    left: 'center',
+                    textStyle: { fontSize: 20, fontWeight: 'bold' }
+                  },
+                  tooltip: {
+                    trigger: 'item',
+                    formatter: function(params) {
+                      if (params.dataType === 'node') {
+                        return `节点: ${params.name}<br/>类型: ${params.data.nodeType}`;
+                      } else {
+                        return `关系: ${params.data.source} → ${params.data.target}<br/>类型: ${params.data.name}`;
+                      }
+                    }
+                  },
+                  legend: {
+                    data: categoryArray.map(c => c.name),
+                    top: 'bottom',
+                    itemGap: 20
+                  },
+                  series: [{
+                    type: 'graph',
+                    layout: 'force',
+                    roam: true,
+                    categories: categoryArray,
+                    data: Object.values(nodes),
+                    links: links,
+                    label: { show: true, position: 'right', formatter: '{b}', fontSize: 12 },
+                    force: { repulsion: 400, edgeLength: 200, gravity: 0.1 },
+                    emphasis: { focus: 'adjacency', lineStyle: { width: 3 } },
+                    lineStyle: { color: 'source', curveness: 0.1, width: 2 }
+                  }]
+                });
+                
+                showStatus(`✅ 成功生成网络图！节点数: ${Object.keys(nodes).length}, 边数: ${links.length}`, 'success');
+                
+                const downloadBtn = document.getElementById('download');
+                if (downloadBtn) {
+                  downloadBtn.style.display = 'inline-block';
+                }
+                
+                // 发送上传通知
+                sendNotification('upload', currentGraphData);
+                
+              } catch (error) {
+                showStatus('文件解析失败: ' + error.message + '。请确保使用正确的Excel格式', 'error');
+                console.error('文件解析错误:', error);
+              }
             };
             
             reader.onerror = function() {
@@ -468,14 +561,6 @@
         console.error('初始化错误:', error);
       }
     });
-    
-    // 立即尝试绑定（如果DOM已经加载）
-    if (document.readyState === 'loading') {
-      console.log('📄 DOM还在加载中，等待DOMContentLoaded');
-    } else {
-      console.log('📄 DOM已加载完成，立即绑定事件');
-      setTimeout(bindEvents, 100); // 稍微延迟以确保元素存在
-    }
     
     console.log('✅ 脚本加载完成');
   </script>
