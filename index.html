@@ -1152,7 +1152,71 @@
       };
     }
     
-    //
+    // 下载图片
+    function downloadImage() {
+      if (!chart) {
+        showStatus('请先上传文件生成图表', 'error');
+        return;
+      }
+      
+      try {
+        const url = chart.getDataURL({
+          pixelRatio: 2,
+          backgroundColor: '#fff'
+        });
+        
+        const link = document.createElement('a');
+        link.download = '语义网络图.png';
+        link.href = url;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        
+        showStatus('图片下载成功！', 'success');
+        
+        // 发送下载通知
+        sendNotification('image_download', {
+          fileName: '语义网络图.png',
+          background: currentBackground
+        });
+        
+      } catch (error) {
+        console.error('❌ 图片下载错误:', error);
+        showStatus('图片下载失败: ' + error.message, 'error');
+      }
+    }
+    
+    // 页面加载完成后初始化
+    window.addEventListener('load', function() {
+      console.log('🚀 页面加载完成，开始初始化...');
+      
+      // 初始化图表
+      initChart();
+      
+      // 绑定文件上传事件
+      const fileInput = document.getElementById('file');
+      if (fileInput) {
+        fileInput.addEventListener('change', handleFileUpload);
+        console.log('✅ 文件上传事件绑定成功');
+      }
+      
+      // 绑定下载按钮事件
+      const downloadBtn = document.getElementById('download');
+      if (downloadBtn) {
+        downloadBtn.addEventListener('click', downloadImage);
+        console.log('✅ 下载按钮事件绑定成功');
+      }
+      
+      console.log('🎉 所有初始化完成！');
+    });
+    
+    // 页面卸载时清理动画
+    window.addEventListener('beforeunload', function() {
+      if (animationInterval) {
+        clearInterval(animationInterval);
+      }
+    });
+    
   </script>
 </body>
 </html>
