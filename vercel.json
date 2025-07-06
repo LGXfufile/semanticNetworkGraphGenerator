@@ -5,5 +5,14 @@
       "src": "**/*",
       "use": "@vercel/static"
     }
-  ]
+  ],
+  "git": {
+    "deploymentEnabled": {
+      "master": true,
+      "test": true
+    }
+  },
+  "github": {
+    "autoAlias": false
+  }
 } 
