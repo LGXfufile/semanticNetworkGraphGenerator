@@ -1,13 +1,15 @@
 export default async function handler(req, res) {
-  // 设置CORS头
+  // 设置CORS
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
   
+  // 处理预检请求
   if (req.method === 'OPTIONS') {
     return res.status(200).end();
   }
   
+  // 只接受POST请求
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' });
   }
@@ -15,110 +17,96 @@ export default async function handler(req, res) {
   // 获取环境变量
   const WEBHOOK_URL = process.env.WECHAT_WEBHOOK_URL;
   
-  // 调试信息
-  console.log('Environment check:', {
-    hasWebhookUrl: !!WEBHOOK_URL,
-    webhookUrlLength: WEBHOOK_URL ? WEBHOOK_URL.length : 0,
-    webhookUrlPrefix: WEBHOOK_URL ? WEBHOOK_URL.substring(0, 50) + '...' : 'undefined'
-  });
+  // 记录调试信息
+  console.log('=== 通知API调用 ===');
+  console.log('时间:', new Date().toISOString());
+  console.log('请求体:', req.body);
+  console.log('WEBHOOK_URL配置:', !!WEBHOOK_URL);
   
   if (!WEBHOOK_URL) {
-    console.error('WECHAT_WEBHOOK_URL not found in environment variables');
+    console.error('环境变量WECHAT_WEBHOOK_URL未配置');
     return res.status(500).json({ 
       error: 'Webhook URL not configured',
-      debug: 'Environment variable WECHAT_WEBHOOK_URL is missing'
+      available_env: Object.keys(process.env).filter(key => key.includes('WECHAT'))
     });
   }
 
   try {
-    const { action, userInfo, fileInfo, deviceInfo } = req.body;
+    const { action, fileInfo = {} } = req.body;
     
-    // 获取用户信息
-    const userIP = req.headers['x-forwarded-for'] || 
-                   req.headers['x-real-ip'] || 
-                   req.connection.remoteAddress || 
-                   'unknown';
+    // 获取客户端信息
+    const clientIP = req.headers['x-forwarded-for'] || 
+                     req.headers['x-real-ip'] || 
+                     'unknown';
     
     const timestamp = new Date().toLocaleString('zh-CN', {
-      timeZone: 'Asia/Shanghai',
-      year: 'numeric',
-      month: '2-digit',
-      day: '2-digit',
-      hour: '2-digit',
-      minute: '2-digit',
-      second: '2-digit'
+      timeZone: 'Asia/Shanghai'
     });
 
-    // 构建消息内容
+    // 根据操作类型构建消息
     let message = '';
     
-    if (action === 'upload') {
-      message = `🔔 **用户上传文件通知**
+    switch(action) {
+      case 'upload':
+        message = `📁 **文件上传通知**
 
-📅 **时间：** ${timestamp}
-👤 **用户IP：** ${userIP}
-📊 **文件信息：**
-   • 节点数：${fileInfo.nodeCount || 0}
-   • 边数：${fileInfo.linkCount || 0}
-   • 数据行数：${fileInfo.dataRows || 0}
-   • 文件名：${fileInfo.fileName || '未知'}
+⏰ ${timestamp}
+🌐 IP: ${clientIP}
+📊 数据: ${fileInfo.nodeCount || 0}节点, ${fileInfo.linkCount || 0}边
+📝 文件: ${fileInfo.fileName || '未知'}
 
-🌐 **网站：** https://semnetworkgraph.store
+🔗 https://semnetworkgraph.store`;
+        break;
+        
+      case 'download':
+        message = `🖼️ **图片下载通知**
 
----
-*语义网络图生成器使用通知*`;
+⏰ ${timestamp}
+🌐 IP: ${clientIP}
+📊 图表: ${fileInfo.nodeCount || 0}节点, ${fileInfo.linkCount || 0}边
 
-    } else if (action === 'download') {
-      message = `🖼️ **用户下载图片通知**
+🔗 https://semnetworkgraph.store`;
+        break;
+        
+      case 'template_download':
+        message = `📥 **模版下载通知**
 
-📅 **时间：** ${timestamp}
-👤 **用户IP：** ${userIP}
-📊 **图表信息：**
-   • 节点数：${fileInfo.nodeCount || 0}
-   • 边数：${fileInfo.linkCount || 0}
+⏰ ${timestamp}
+🌐 IP: ${clientIP}
+📋 操作: 下载数据模版
 
-🌐 **网站：** https://semnetworkgraph.store
+🔗 https://semnetworkgraph.store`;
+        break;
+        
+      case 'page_visit':
+        message = `👀 **页面访问通知**
 
----
-*用户完成了完整使用流程*`;
+⏰ ${timestamp}
+🌐 IP: ${clientIP}
 
-    } else if (action === 'page_visit') {
-      message = `👀 **用户访问通知**
+🔗 https://semnetworkgraph.store`;
+        break;
+        
+      default:
+        message = `❓ **未知操作通知**
 
-📅 **时间：** ${timestamp}
-👤 **用户IP：** ${userIP}
-🌐 **网站：** https://semnetworkgraph.store
+⏰ ${timestamp}
+🌐 IP: ${clientIP}
+🔧 操作: ${action}
 
----
-*新用户访问*`;
-
-    } else if (action === 'template_download') {
-      message = `📥 **用户下载模版通知**
-
-📅 **时间：** ${timestamp}
-👤 **用户IP：** ${userIP}
-📋 **操作：** 下载数据模版
-
-🌐 **网站：** https://semnetworkgraph.store
-
----
-*用户正在学习使用方法*`;
+🔗 https://semnetworkgraph.store`;
     }
 
-    // 准备发送的数据
+    // 准备发送数据
     const payload = {
-      msgtype: 'markdown',
-      markdown: {
+      msgtype: 'text',  // 改用text类型，更稳定
+      text: {
         content: message
       }
     };
 
-    console.log('Sending notification:', {
-      action,
-      webhookUrl: WEBHOOK_URL.substring(0, 50) + '...',
-      messageLength: message.length,
-      payload: JSON.stringify(payload).substring(0, 200) + '...'
-    });
+    console.log('发送消息:', message);
+    console.log('发送到:', WEBHOOK_URL.substring(0, 50) + '...');
 
     // 发送到企业微信
     const response = await fetch(WEBHOOK_URL, {
@@ -131,40 +119,40 @@ export default async function handler(req, res) {
 
     const responseText = await response.text();
     
-    console.log('WeChat API Response:', {
+    console.log('微信响应:', {
       status: response.status,
-      statusText: response.statusText,
-      response: responseText
+      body: responseText
     });
 
     if (response.ok) {
-      const responseData = JSON.parse(responseText);
-      if (responseData.errcode === 0) {
-        console.log('Notification sent successfully');
+      const result = JSON.parse(responseText);
+      if (result.errcode === 0) {
         return res.status(200).json({ 
           success: true, 
           message: 'Notification sent successfully' 
         });
       } else {
-        console.error('WeChat API Error:', responseData);
+        console.error('微信API错误:', result);
         return res.status(500).json({ 
           error: 'WeChat API Error', 
-          details: responseData 
+          details: result 
         });
       }
     } else {
-      console.error('HTTP Error:', response.status, responseText);
+      console.error('HTTP错误:', response.status, responseText);
       return res.status(500).json({ 
         error: 'HTTP Error', 
         status: response.status,
         details: responseText 
       });
     }
+
   } catch (error) {
-    console.error('Notification error:', error);
+    console.error('通知发送异常:', error);
     return res.status(500).json({ 
       error: 'Internal server error', 
-      details: error.message 
+      details: error.message,
+      stack: error.stack
     });
   }
 } 
