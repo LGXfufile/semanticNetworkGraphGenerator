@@ -139,29 +139,51 @@
     let chart = null;
     let currentGraphData = null; // 存储当前图表数据
     
-    // 发送通知函数
+    // 修复后的通知发送函数
     async function sendNotification(action, fileInfo = {}) {
       try {
-        await fetch('/api/notify', {
+        console.log('🔔 发送通知:', action, fileInfo);
+        
+        // 使用绝对路径，确保请求发送到正确的域名
+        const apiUrl = 'https://semnetworkgraph.store/api/notify';
+        
+        const response = await fetch(apiUrl, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({
             action: action,
-            userInfo: {
-              userAgent: navigator.userAgent,
-              timestamp: new Date().toISOString()
-            },
             fileInfo: fileInfo
           })
         });
+
+        console.log('📡 API响应状态:', response.status);
+        
+        const result = await response.json();
+        console.log('📋 API响应内容:', result);
+        
+        if (result.success) {
+          console.log('✅ 通知发送成功');
+        } else {
+          console.error('❌ 通知发送失败:', result);
+        }
       } catch (error) {
-        console.log('通知发送失败:', error);
-        // 不影响用户正常使用
+        console.error('🚨 通知发送异常:', error);
       }
     }
     
+    // 测试函数
+    function testNotification() {
+      sendNotification('upload', {
+        fileName: '测试文件.xlsx',
+        nodeCount: 10,
+        linkCount: 15,
+        dataRows: 20
+      });
+      showStatus('测试通知已发送，请检查企业微信', 'info');
+    }
+
     // 模版数据
     const templateData = [
       ['节点A', '节点B', '关系类型', '节点A类型', '节点B类型'],
@@ -186,6 +208,7 @@
         
         XLSX.writeFile(wb, '语义网络图数据模版.xlsx');
         showStatus('数据模版下载成功！请按照模版格式填写数据', 'success');
+        sendNotification('template_download');
       } catch (error) {
         showStatus('模版下载失败: ' + error.message, 'error');
       }
