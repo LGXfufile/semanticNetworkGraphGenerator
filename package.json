@@ -15,11 +15,11 @@
     "network-graph",
     "echarts"
   ],
-  "author": "Your Name",
+  "author": "LGXfufile",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/yourusername/semantic-network-generator.git"
+    "url": "https://github.com/LGXfufile/semanticNetworkGraphGenerator.git"
   },
   "homepage": "https://semnetworkgraph.store"
 } 

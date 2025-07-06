@@ -3,7 +3,7 @@
   "name": "semantic-network-generator",
   "builds": [
     {
-      "src": "**/*",
+      "src": "index.html",
       "use": "@vercel/static"
     },
     {
@@ -11,11 +11,14 @@
       "use": "@vercel/node"
     }
   ],
-  "redirects": [
+  "routes": [
     {
-      "source": "https://www.semnetworkgraph.store/(.*)",
-      "destination": "https://semnetworkgraph.store/$1",
-      "permanent": true
+      "src": "/api/(.*)",
+      "dest": "/api/$1"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/index.html"
     }
   ],
   "headers": [
@@ -35,29 +38,13 @@
           "value": "Content-Type, Authorization"
         }
       ]
-    },
-    {
-      "source": "/(.*)",
-      "headers": [
-        {
-          "key": "X-Content-Type-Options",
-          "value": "nosniff"
-        },
-        {
-          "key": "X-Frame-Options",
-          "value": "DENY"
-        },
-        {
-          "key": "X-XSS-Protection",
-          "value": "1; mode=block"
-        }
-      ]
     }
   ],
-  "rewrites": [
+  "redirects": [
     {
-      "source": "/(.*)",
-      "destination": "/index.html"
+      "source": "https://www.semnetworkgraph.store/(.*)",
+      "destination": "https://semnetworkgraph.store/$1",
+      "permanent": true
     }
   ]
 } 
