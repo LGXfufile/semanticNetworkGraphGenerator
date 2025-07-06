@@ -174,6 +174,15 @@
       font-size: 14px;
       animation: fadeIn 0.5s ease-out 0.6s both;
     }
+    .debug-info {
+      margin-top: 10px;
+      padding: 10px;
+      background: #f8f9fa;
+      border-radius: 4px;
+      font-size: 12px;
+      color: #666;
+      text-align: left;
+    }
   </style>
 </head>
 <body>
@@ -226,6 +235,25 @@
         if (type === 'error') {
           console.error(message);
         }
+      }
+    }
+    
+    // 显示调试信息
+    function showDebugInfo(data) {
+      const statusDiv = document.getElementById('status');
+      if (statusDiv) {
+        const debugHtml = `
+          <div class="debug-info">
+            <strong>调试信息:</strong><br>
+            文件名: ${data.fileName || 'N/A'}<br>
+            原始数据行数: ${data.totalRows || 0}<br>
+            有效数据行数: ${data.validRows || 0}<br>
+            节点数: ${data.nodeCount || 0}<br>
+            连接数: ${data.linkCount || 0}<br>
+            节点类型: ${data.categories ? data.categories.join(', ') : 'N/A'}
+          </div>
+        `;
+        statusDiv.innerHTML += debugHtml;
       }
     }
     
@@ -443,6 +471,249 @@
       }
     }
     
+    // 处理文件上传
+    function handleFileUpload(file) {
+      console.log('📁 开始处理文件:', file.name);
+      showStatus('正在读取文件...', 'info');
+      
+      const reader = new FileReader();
+      reader.onload = function(evt) {
+        try {
+          console.log('📖 文件读取完成，开始解析...');
+          const data = new Uint8Array(evt.target.result);
+          const workbook = XLSX.read(data, {type: 'array'});
+          
+          console.log('📊 工作簿信息:', workbook.SheetNames);
+          
+          if (workbook.SheetNames.length === 0) {
+            showStatus('Excel 文件中没有找到工作表', 'error');
+            return;
+          }
+          
+          const sheet = workbook.Sheets[workbook.SheetNames[0]];
+          const json = XLSX.utils.sheet_to_json(sheet, {header: 1});
+          
+          console.log('📋 原始数据:', json);
+          console.log('📏 数据行数:', json.length);
+          
+          if (json.length < 2) {
+            showStatus('Excel 文件数据不足，至少需要表头和一行数据。请下载数据模版参考格式', 'error');
+            return;
+          }
+          
+          // 验证表头格式
+          const headers = json[0];
+          console.log('📝 表头:', headers);
+          
+          const expectedHeaders = ['节点A', '节点B', '关系类型', '节点A类型', '节点B类型'];
+          const headersMatch = expectedHeaders.every((header, index) => 
+            headers[index] && headers[index].toString().trim() === header
+          );
+          
+          if (!headersMatch) {
+            showStatus('表头格式不正确，请使用标准模版。应包含：节点A, 节点B, 关系类型, 节点A类型, 节点B类型', 'error');
+            console.log('❌ 期望的表头:', expectedHeaders);
+            console.log('❌ 实际的表头:', headers);
+            return;
+          }
+          
+          showStatus('正在生成网络图...', 'info');
+          
+          // 解析数据
+          let nodes = {}, links = [];
+          let categories = new Set();
+          let nodeTypes = {};
+          let validRows = 0;
+          
+          json.forEach((row, i) => {
+            if (i === 0) return; // 跳过表头
+            if (!row || row.length < 5) {
+              console.log(`⚠️ 跳过不完整的行 ${i}:`, row);
+              return;
+            }
+            
+            const [nodeA, nodeB, relationType, nodeAType, nodeBType] = row.map(cell => 
+              cell ? cell.toString().trim() : ''
+            );
+            
+            console.log(`📊 处理第 ${i} 行:`, {nodeA, nodeB, relationType, nodeAType, nodeBType});
+            
+            if (!nodeA || !nodeB || !nodeAType || !nodeBType) {
+              console.log(`⚠️ 跳过空值行 ${i}:`, {nodeA, nodeB, nodeAType, nodeBType});
+              return;
+            }
+            
+            validRows++;
+            
+            // 记录节点类型
+            nodeTypes[nodeA] = nodeAType;
+            nodeTypes[nodeB] = nodeBType;
+            
+            categories.add(nodeAType);
+            categories.add(nodeBType);
+            
+            // 创建节点
+            if (!nodes[nodeA]) {
+              nodes[nodeA] = {
+                id: nodeA, 
+                name: nodeA, 
+                category: nodeAType, 
+                nodeType: nodeAType,
+                itemStyle: { color: getNodeColor(nodeAType) }
+              };
+            }
+            if (!nodes[nodeB]) {
+              nodes[nodeB] = {
+                id: nodeB, 
+                name: nodeB, 
+                category: nodeBType, 
+                nodeType: nodeBType,
+                itemStyle: { color: getNodeColor(nodeBType) }
+              };
+            }
+            
+            // 创建连接
+            links.push({
+              source: nodeA, 
+              target: nodeB, 
+              name: relationType || '关联', 
+              value: relationType
+            });
+          });
+          
+          console.log('📈 数据解析结果:', {
+            totalRows: json.length,
+            validRows: validRows,
+            nodeCount: Object.keys(nodes).length,
+            linkCount: links.length,
+            categories: Array.from(categories)
+          });
+          
+          if (Object.keys(nodes).length === 0) {
+            showStatus('没有找到有效的节点数据，请检查数据格式', 'error');
+            return;
+          }
+          
+          const categoryArray = Array.from(categories).map(cat => ({name: cat}));
+          
+          // 显示调试信息
+          showDebugInfo({
+            fileName: file.name,
+            totalRows: json.length,
+            validRows: validRows,
+            nodeCount: Object.keys(nodes).length,
+            linkCount: links.length,
+            categories: Array.from(categories)
+          });
+          
+          // 保存当前图表数据
+          currentGraphData = {
+            fileName: file.name,
+            nodeCount: Object.keys(nodes).length,
+            linkCount: links.length,
+            dataRows: validRows
+          };
+          
+          console.log('🎨 开始更新图表...');
+          
+          // 更新图表
+          const option = {
+            title: {
+              text: '语义网络图',
+              left: 'center',
+              top: 20,
+              textStyle: { 
+                fontSize: 20, 
+                fontWeight: 'bold',
+                color: '#333'
+              }
+            },
+            tooltip: {
+              trigger: 'item',
+              formatter: function(params) {
+                if (params.dataType === 'node') {
+                  return `节点: ${params.name}<br/>类型: ${params.data.nodeType}`;
+                } else {
+                  return `关系: ${params.data.source} → ${params.data.target}<br/>类型: ${params.data.name}`;
+                }
+              },
+              backgroundColor: 'rgba(0,0,0,0.8)',
+              textStyle: { color: '#fff' }
+            },
+            legend: {
+              data: categoryArray.map(c => c.name),
+              top: 'bottom',
+              itemGap: 20,
+              textStyle: { fontSize: 12 }
+            },
+            series: [{
+              type: 'graph',
+              layout: 'force',
+              roam: true,
+              categories: categoryArray,
+              data: Object.values(nodes),
+              links: links,
+              label: { 
+                show: true, 
+                position: 'right', 
+                formatter: '{b}', 
+                fontSize: 12,
+                color: '#333'
+              },
+              force: { 
+                repulsion: 500, 
+                edgeLength: 150, 
+                gravity: 0.1 
+              },
+              emphasis: { 
+                focus: 'adjacency', 
+                lineStyle: { width: 4 },
+                itemStyle: { shadowBlur: 10, shadowColor: 'rgba(0,0,0,0.3)' }
+              },
+              lineStyle: { 
+                color: 'source', 
+                curveness: 0.2, 
+                width: 2,
+                opacity: 0.7
+              },
+              itemStyle: {
+                borderColor: '#fff',
+                borderWidth: 2,
+                shadowBlur: 5,
+                shadowColor: 'rgba(0,0,0,0.2)'
+              }
+            }],
+            backgroundColor: '#fff'
+          };
+          
+          chart.setOption(option, true); // 使用 true 参数强制重新渲染
+          
+          console.log('✅ 图表更新完成');
+          
+          showStatus(`✅ 成功生成网络图！节点数: ${Object.keys(nodes).length}, 边数: ${links.length}`, 'success');
+          
+          const downloadBtn = document.getElementById('download');
+          if (downloadBtn) {
+            downloadBtn.style.display = 'inline-block';
+          }
+          
+          // 发送上传通知
+          sendNotification('upload', currentGraphData);
+          
+        } catch (error) {
+          showStatus('文件解析失败: ' + error.message + '。请确保使用正确的Excel格式', 'error');
+          console.error('❌ 文件解析错误:', error);
+        }
+      };
+      
+      reader.onerror = function() {
+        showStatus('文件读取失败，请重试', 'error');
+        console.error('❌ 文件读取错误');
+      };
+      
+      reader.readAsArrayBuffer(file);
+    }
+    
     // 等待DOM完全加载
     window.addEventListener('load', function() {
       console.log('🚀 页面完全加载完成');
@@ -479,155 +750,8 @@
             const file = e.target.files[0];
             if (!file) return;
             
-            showStatus('正在读取文件...', 'info');
-            
-            const reader = new FileReader();
-            reader.onload = function(evt) {
-              try {
-                const data = new Uint8Array(evt.target.result);
-                const workbook = XLSX.read(data, {type: 'array'});
-                
-                if (workbook.SheetNames.length === 0) {
-                  showStatus('Excel 文件中没有找到工作表', 'error');
-                  return;
-                }
-                
-                const sheet = workbook.Sheets[workbook.SheetNames[0]];
-                const json = XLSX.utils.sheet_to_json(sheet, {header: 1});
-                
-                if (json.length < 2) {
-                  showStatus('Excel 文件数据不足，至少需要表头和一行数据。请下载数据模版参考格式', 'error');
-                  return;
-                }
-                
-                // 验证表头格式
-                const headers = json[0];
-                const expectedHeaders = ['节点A', '节点B', '关系类型', '节点A类型', '节点B类型'];
-                const headersMatch = expectedHeaders.every((header, index) => 
-                  headers[index] && headers[index].toString().trim() === header
-                );
-                
-                if (!headersMatch) {
-                  showStatus('表头格式不正确，请使用标准模版。应包含：节点A, 节点B, 关系类型, 节点A类型, 节点B类型', 'error');
-                  return;
-                }
-                
-                showStatus('正在生成网络图...', 'info');
-                
-                // 解析数据
-                let nodes = {}, links = [];
-                let categories = new Set();
-                let nodeTypes = {};
-                
-                json.forEach((row, i) => {
-                  if (i === 0) return; // 跳过表头
-                  if (!row || row.length < 5) return; // 跳过数据不完整的行
-                  
-                  const [nodeA, nodeB, relationType, nodeAType, nodeBType] = row.map(cell => 
-                    cell ? cell.toString().trim() : ''
-                  );
-                  
-                  if (!nodeA || !nodeB || !nodeAType || !nodeBType) return; // 跳过空值
-                  
-                  // 记录节点类型
-                  nodeTypes[nodeA] = nodeAType;
-                  nodeTypes[nodeB] = nodeBType;
-                  
-                  categories.add(nodeAType);
-                  categories.add(nodeBType);
-                  
-                  // 创建节点
-                  if (!nodes[nodeA]) {
-                    nodes[nodeA] = {
-                      id: nodeA, name: nodeA, category: nodeAType, nodeType: nodeAType,
-                      itemStyle: { color: getNodeColor(nodeAType) }
-                    };
-                  }
-                  if (!nodes[nodeB]) {
-                    nodes[nodeB] = {
-                      id: nodeB, name: nodeB, category: nodeBType, nodeType: nodeBType,
-                      itemStyle: { color: getNodeColor(nodeBType) }
-                    };
-                  }
-                  
-                  // 创建连接
-                  links.push({
-                    source: nodeA, target: nodeB, name: relationType || '关联', value: relationType
-                  });
-                });
-                
-                if (Object.keys(nodes).length === 0) {
-                  showStatus('没有找到有效的节点数据，请检查数据格式', 'error');
-                  return;
-                }
-                
-                const categoryArray = Array.from(categories).map(cat => ({name: cat}));
-                
-                // 保存当前图表数据
-                currentGraphData = {
-                  fileName: file.name,
-                  nodeCount: Object.keys(nodes).length,
-                  linkCount: links.length,
-                  dataRows: json.length - 1
-                };
-                
-                // 更新图表
-                chart.setOption({
-                  title: {
-                    text: '语义网络图',
-                    left: 'center',
-                    textStyle: { fontSize: 20, fontWeight: 'bold' }
-                  },
-                  tooltip: {
-                    trigger: 'item',
-                    formatter: function(params) {
-                      if (params.dataType === 'node') {
-                        return `节点: ${params.name}<br/>类型: ${params.data.nodeType}`;
-                      } else {
-                        return `关系: ${params.data.source} → ${params.data.target}<br/>类型: ${params.data.name}`;
-                      }
-                    }
-                  },
-                  legend: {
-                    data: categoryArray.map(c => c.name),
-                    top: 'bottom',
-                    itemGap: 20
-                  },
-                  series: [{
-                    type: 'graph',
-                    layout: 'force',
-                    roam: true,
-                    categories: categoryArray,
-                    data: Object.values(nodes),
-                    links: links,
-                    label: { show: true, position: 'right', formatter: '{b}', fontSize: 12 },
-                    force: { repulsion: 400, edgeLength: 200, gravity: 0.1 },
-                    emphasis: { focus: 'adjacency', lineStyle: { width: 3 } },
-                    lineStyle: { color: 'source', curveness: 0.1, width: 2 }
-                  }]
-                });
-                
-                showStatus(`✅ 成功生成网络图！节点数: ${Object.keys(nodes).length}, 边数: ${links.length}`, 'success');
-                
-                const downloadBtn = document.getElementById('download');
-                if (downloadBtn) {
-                  downloadBtn.style.display = 'inline-block';
-                }
-                
-                // 发送上传通知
-                sendNotification('upload', currentGraphData);
-                
-              } catch (error) {
-                showStatus('文件解析失败: ' + error.message + '。请确保使用正确的Excel格式', 'error');
-                console.error('文件解析错误:', error);
-              }
-            };
-            
-            reader.onerror = function() {
-              showStatus('文件读取失败，请重试', 'error');
-            };
-            
-            reader.readAsArrayBuffer(file);
+            console.log('📁 用户选择文件:', file.name, file.type, file.size);
+            handleFileUpload(file);
           });
         }
         
@@ -640,7 +764,7 @@
         
       } catch (error) {
         showStatus('页面初始化失败: ' + error.message, 'error');
-        console.error('初始化错误:', error);
+        console.error('❌ 初始化错误:', error);
       }
     });
     
