@@ -317,7 +317,6 @@
   
   <script>
     let chart;
-    let animationInterval;
     let currentBackground = 'transparent';
     
     // 节点颜色映射
@@ -485,7 +484,7 @@
       console.log('✅ 图表初始化完成');
     }
     
-    // 更新图表
+    // 更新图表（移除所有动画效果）
     function updateChart(graphData) {
       if (!chart) {
         console.error('❌ 图表未初始化');
@@ -493,11 +492,6 @@
       }
       
       console.log('📊 更新图表数据:', graphData);
-      
-      // 清除之前的动画
-      if (animationInterval) {
-        clearInterval(animationInterval);
-      }
       
       // 配置图表选项
       const option = {
@@ -575,78 +569,16 @@
             repulsion: 1000,
             gravity: 0.1,
             edgeLength: [50, 200],
-            layoutAnimation: true
+            layoutAnimation: false  // 禁用布局动画
           },
-          animationDuration: 1500,
-          animationEasing: 'cubicInOut'
+          animation: false  // 禁用所有动画
         }]
       };
       
       // 设置图表选项
       chart.setOption(option, true);
       
-      // 启动节点动画效果
-      startNodeAnimation();
-      
-      console.log('✅ 图表更新完成');
-    }
-    
-    // 启动节点动画效果
-    function startNodeAnimation() {
-      if (animationInterval) {
-        clearInterval(animationInterval);
-      }
-      
-      let animationStep = 0;
-      animationInterval = setInterval(() => {
-        animationStep++;
-        
-        // 获取当前选项
-        const currentOption = chart.getOption();
-        if (!currentOption.series || !currentOption.series[0]) return;
-        
-        const series = currentOption.series[0];
-        if (!series.data) return;
-        
-        // 更新节点动画效果
-        series.data.forEach((node, index) => {
-          const phase = (animationStep + index * 10) * 0.1;
-          const scale = 1 + Math.sin(phase) * 0.1;
-          
-          node.symbolSize = (node.value || 50) * scale;
-          
-          // 添加呼吸效果
-          if (node.itemStyle) {
-            const alpha = 0.7 + Math.sin(phase) * 0.3;
-            const color = node.itemStyle.color;
-            if (typeof color === 'string') {
-              node.itemStyle.color = color.replace(/rgba?\([^)]+\)/, 
-                color.includes('rgb') ? 
-                  color.replace(/[\d.]+\)$/, alpha + ')') : 
-                  color + Math.floor(alpha * 255).toString(16).padStart(2, '0')
-              );
-            }
-          }
-        });
-        
-        // 更新连线动画效果
-        if (series.links) {
-          series.links.forEach((link, index) => {
-            const phase = (animationStep + index * 5) * 0.05;
-            const opacity = 0.6 + Math.sin(phase) * 0.4;
-            
-            if (link.lineStyle) {
-              link.lineStyle.opacity = opacity;
-            }
-          });
-        }
-        
-        // 更新图表
-        chart.setOption({
-          series: [series]
-        }, false);
-        
-      }, 100);
+      console.log('✅ 图表更新完成（静态模式）');
     }
     
     // 处理文件上传
@@ -857,13 +789,6 @@
       }
       
       console.log('🎉 所有初始化完成！');
-    });
-    
-    // 页面卸载时清理动画
-    window.addEventListener('beforeunload', function() {
-      if (animationInterval) {
-        clearInterval(animationInterval);
-      }
     });
     
   </script>
