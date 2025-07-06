@@ -5,12 +5,5 @@
       "src": "**/*",
       "use": "@vercel/static"
     }
-  ],
-  "redirects": [
-    {
-      "source": "https://www.semnetworkgraph.store/(.*)",
-      "destination": "https://semnetworkgraph.store/$1",
-      "permanent": true
-    }
   ]
 } 
